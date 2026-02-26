@@ -2,8 +2,8 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Logística Master - V14 com CIEs</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Logística Master - V15 Mobile</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
@@ -11,30 +11,625 @@
             --bg: #f4f7f6; --danger: #e74c3c; --success: #2ecc71; --warning: #f39c12;
             --info: #3498db; --dark: #2c3e50; --cie: #9b59b6;
         }
-        * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
-        body { margin: 0; background-color: var(--bg); display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+        * { 
+            box-sizing: border-box; 
+            font-family: 'Segoe UI', sans-serif; 
+            -webkit-tap-highlight-color: transparent; /* Remove highlight on tap */
+        }
         
-        nav.sidebar { background: var(--primary); color: white; flex-shrink: 0; z-index: 100; }
-        .sidebar-header { padding: 15px; text-align: center; background: #1a252f; font-weight: bold; }
-        .sidebar-menu { display: flex; overflow-x: auto; list-style: none; padding: 0; margin: 0; scrollbar-width: none; }
-        .sidebar-menu li { padding: 12px 15px; white-space: nowrap; cursor: pointer; border-bottom: 3px solid transparent; font-size: 0.9rem; transition: 0.3s; }
-        .sidebar-menu li:hover { background: var(--secondary); }
-        .sidebar-menu li.active { background: var(--accent); border-bottom-color: white; }
+        body { 
+            margin: 0; 
+            background-color: var(--bg); 
+            display: flex; 
+            flex-direction: column; 
+            height: 100vh; 
+            overflow: hidden; /* Mantém hidden no body */
+        }
+        
+        /* Container principal com scroll nativo */
+        #app-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+            height: 100%;
+        }
+        
+        nav.sidebar { 
+            background: var(--primary); 
+            color: white; 
+            flex-shrink: 0; 
+            z-index: 100; 
+            height: 100%;
+            overflow-y: auto; /* Sidebar com scroll próprio se necessário */
+            -webkit-overflow-scrolling: touch; /* Scroll suave no iOS */
+        }
+        
+        .sidebar-header { 
+            padding: 15px; 
+            text-align: center; 
+            background: #1a252f; 
+            font-weight: bold;
+            position: sticky;
+            top: 0;
+            z-index: 101;
+        }
+        
+        .sidebar-menu { 
+            display: flex; 
+            flex-direction: column;
+            list-style: none; 
+            padding: 0; 
+            margin: 0; 
+        }
+        
+        .sidebar-menu li { 
+            padding: 15px 15px; 
+            cursor: pointer; 
+            font-size: 0.95rem; 
+            transition: 0.3s;
+            border-left: 3px solid transparent;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .sidebar-menu li i {
+            width: 20px;
+            text-align: center;
+        }
+        
+        .sidebar-menu li:hover { 
+            background: var(--secondary); 
+        }
+        
+        .sidebar-menu li.active { 
+            background: var(--accent); 
+            border-left-color: white;
+        }
 
-        main { flex-grow: 1; padding: 15px; overflow-y: auto; }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; animation: fadeIn 0.3s; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        main { 
+            flex: 1; 
+            padding: 15px; 
+            overflow-y: auto; /* MAIN com scroll nativo */
+            -webkit-overflow-scrolling: touch; /* Scroll suave no iOS */
+            height: 100%;
+            position: relative;
+        }
+        
+        /* Botão flutuante para voltar ao topo */
+        #scroll-top-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: white;
+            border: none;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            z-index: 1000;
+            transition: all 0.3s;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        #scroll-top-btn.show {
+            display: flex;
+        }
+        
+        #scroll-top-btn:hover {
+            transform: scale(1.1);
+            background: var(--primary);
+        }
+        
+        #scroll-top-btn:active {
+            transform: scale(0.9);
+        }
+        
+        .tab-content { 
+            display: none; 
+            min-height: 100%; /* Garante altura mínima */
+        }
+        
+        .tab-content.active { 
+            display: block; 
+            animation: fadeIn 0.3s; 
+        }
+        
+        @keyframes fadeIn { 
+            from { opacity: 0; } 
+            to { opacity: 1; } 
+        }
 
-        .card { background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 15px; }
-        .grid-cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-        .grid-cards-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-        .grid-cards-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
-        .dash-card { border-top: 4px solid; text-align: center; padding: 10px; }
-        .dash-card h1 { margin: 5px 0; font-size: 1.6rem; }
-        .dash-card small { color: #666; }
+        .card { 
+            background: white; 
+            padding: 15px; 
+            border-radius: 8px; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1); 
+            margin-bottom: 15px; 
+        }
+        
+        .grid-cards { 
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 10px; 
+        }
+        
+        .grid-cards-3 { 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 10px; 
+        }
+        
+        .grid-cards-4 { 
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 10px; 
+        }
+        
+        @media (min-width: 768px) {
+            .grid-cards-4 {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        
+        .dash-card { 
+            border-top: 4px solid; 
+            text-align: center; 
+            padding: 10px; 
+        }
+        
+        .dash-card h1 { 
+            margin: 5px 0; 
+            font-size: 1.6rem; 
+        }
+        
+        .dash-card small { 
+            color: #666; 
+        }
 
-        .table-responsive { width: 100%; overflow-x: auto; background: white; border-radius: 8px; margin-top: 10px; }
+        .table-responsive { 
+            width: 100%; 
+            overflow-x: auto; 
+            background: white; 
+            border-radius: 8px; 
+            margin-top: 10px; 
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            min-width: 400px; 
+        }
+        
+        th { 
+            background: var(--secondary); 
+            color: white; 
+            padding: 12px 10px; 
+            text-align: left; 
+            font-size: 0.85rem; 
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        td { 
+            padding: 12px 10px; 
+            border-bottom: 1px solid #eee; 
+            font-size: 0.9rem; 
+        }
+
+        .form-group { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 10px; 
+        }
+        
+        input, select, button, textarea { 
+            padding: 14px; 
+            border-radius: 8px; 
+            border: 1px solid #ccc; 
+            font-size: 16px; /* 16px previne zoom no iOS */
+            -webkit-appearance: none;
+            appearance: none;
+        }
+        
+        textarea { 
+            min-height: 100px; 
+            resize: vertical; 
+        }
+        
+        .btn-add { 
+            background: var(--success); 
+            color: white; 
+            border: none; 
+            font-weight: bold; 
+            cursor: pointer; 
+        }
+        
+        .btn-danger { 
+            background: var(--danger); 
+            color: white; 
+            border: none; 
+            padding: 10px; 
+            border-radius: 6px; 
+            cursor: pointer; 
+        }
+        
+        .btn-warning { 
+            background: var(--warning); 
+            color: white; 
+            border: none; 
+            padding: 10px; 
+            border-radius: 6px; 
+            cursor: pointer; 
+        }
+        
+        .btn-info { 
+            background: var(--info); 
+            color: white; 
+            border: none; 
+            padding: 10px; 
+            border-radius: 6px; 
+            cursor: pointer; 
+        }
+        
+        .btn-cie { 
+            background: var(--cie); 
+            color: white; 
+            border: none; 
+            padding: 10px; 
+            border-radius: 6px; 
+            cursor: pointer; 
+        }
+        
+        .badge { 
+            padding: 4px 10px; 
+            border-radius: 20px; 
+            font-size: 0.8rem; 
+            font-weight: bold; 
+            display: inline-block;
+        }
+        
+        .badge-success { 
+            background: var(--success); 
+            color: white; 
+        }
+        
+        .badge-warning { 
+            background: var(--warning); 
+            color: white; 
+        }
+        
+        .badge-danger { 
+            background: var(--danger); 
+            color: white; 
+        }
+        
+        .badge-info { 
+            background: var(--info); 
+            color: white; 
+        }
+        
+        .badge-cie { 
+            background: var(--cie); 
+            color: white; 
+        }
+        
+        .search-box { 
+            display: flex; 
+            gap: 10px; 
+            margin-bottom: 15px; 
+            flex-wrap: wrap; 
+        }
+        
+        .search-box input, .search-box select { 
+            flex: 1; 
+            min-width: 200px; 
+        }
+        
+        .cie-alert {
+            background: var(--cie);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: pulse 2s infinite;
+            flex-wrap: wrap;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.8; }
+            100% { opacity: 1; }
+        }
+        
+        .cie-item {
+            border-left: 4px solid var(--cie);
+            margin-bottom: 10px;
+        }
+        
+        .cie-number {
+            font-weight: bold;
+            color: var(--cie);
+            font-size: 1.1rem;
+        }
+        
+        .storage-info {
+            background: var(--accent);
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .storage-bar {
+            height: 20px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 10px;
+            overflow: hidden;
+            flex: 1;
+            min-width: 150px;
+        }
+        
+        .storage-fill {
+            height: 100%;
+            background: white;
+            transition: width 0.3s;
+        }
+        
+        .task-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 10px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .stat-item {
+            text-align: center;
+            flex: 1;
+            min-width: 80px;
+        }
+        
+        .stat-value {
+            font-size: 1.4rem;
+            font-weight: bold;
+        }
+        
+        .stat-label {
+            font-size: 0.8rem;
+            color: #666;
+        }
+        
+        /* Ajustes mobile */
+        @media (max-width: 767px) {
+            #app-container {
+                flex-direction: column;
+            }
+            
+            nav.sidebar {
+                width: 100%;
+                height: auto;
+                max-height: 60px;
+                overflow-x: auto;
+                overflow-y: hidden;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            .sidebar-header {
+                display: none; /* Esconde header no mobile para economizar espaço */
+            }
+            
+            .sidebar-menu {
+                flex-direction: row;
+                padding: 5px;
+                white-space: nowrap;
+            }
+            
+            .sidebar-menu li {
+                display: inline-block;
+                padding: 10px 15px;
+                border-left: none;
+                border-bottom: 3px solid transparent;
+            }
+            
+            .sidebar-menu li.active {
+                border-bottom-color: white;
+                border-left-color: transparent;
+            }
+            
+            main {
+                padding: 10px;
+            }
+            
+            .grid-cards,
+            .grid-cards-3,
+            .grid-cards-4 {
+                gap: 8px;
+            }
+            
+            .dash-card h1 {
+                font-size: 1.4rem;
+            }
+            
+            input, select, button, textarea {
+                padding: 12px;
+                font-size: 16px;
+            }
+            
+            .search-box {
+                flex-direction: column;
+            }
+            
+            .search-box input,
+            .search-box select,
+            .search-box button {
+                width: 100%;
+            }
+        }
+
+        /* Pull to refresh suporte */
+        .tab-content {
+            overscroll-behavior: contain;
+        }
+    </style>
+</head>
+<body>
+    <div id="app-container">
+        <nav class="sidebar">
+            <div class="sidebar-header">LOGÍSTICA MASTER</div>
+            <ul class="sidebar-menu">
+                <li class="active" onclick="showTab('dashboard')"><i class="fas fa-chart-pie"></i> Dashboard</li>
+                <li onclick="showTab('ponto')"><i class="fas fa-clock"></i> Ponto</li>
+                <li onclick="showTab('tarefas')"><i class="fas fa-tasks"></i> Tarefas</li>
+                <li onclick="showTab('equipe')"><i class="fas fa-users"></i> Equipe</li>
+                <li onclick="showTab('ocorrencias')"><i class="fas fa-exclamation-triangle"></i> CIEs</li>
+                <li onclick="showTab('historico')"><i class="fas fa-history"></i> Histórico</li>
+                <li onclick="showTab('configuracoes')"><i class="fas fa-cog"></i> Config</li>
+            </ul>
+        </nav>
+
+        <main id="main-content">
+            <button id="scroll-top-btn" onclick="scrollToTop()" title="Voltar ao topo">
+                <i class="fas fa-arrow-up"></i>
+            </button>
+
+            <div id="storage-warning" style="display: none;" class="storage-info">
+                <i class="fas fa-exclamation-triangle"></i>
+                <div class="storage-bar">
+                    <div id="storage-fill" class="storage-fill" style="width: 0%"></div>
+                </div>
+                <span id="storage-text">0% utilizado</span>
+                <button onclick="limparHistoricoAntigo()" class="btn-warning" style="margin-left: auto;">Limpar</button>
+            </div>
+
+            <section id="dashboard" class="tab-content active">
+                <div id="cie-alertas-dashboard"></div>
+                <div id="alertas-limite"></div>
+                
+                <h3><i class="fas fa-users"></i> Equipe</h3>
+                <div class="grid-cards">
+                    <div class="card dash-card" style="border-top-color: var(--accent);">
+                        <small><i class="fas fa-users"></i> Total</small>
+                        <h1 id="d-total">0</h1>
+                    </div>
+                    <div class="card dash-card" style="border-top-color: var(--success);">
+                        <small><i class="fas fa-check-circle"></i> Presentes</small>
+                        <h1 id="d-pres">0</h1>
+                    </div>
+                    <div class="card dash-card" style="border-top-color: var(--warning);">
+                        <small><i class="fas fa-exclamation-triangle"></i> Atrasos</small>
+                        <h1 id="d-atr">0</h1>
+                    </div>
+                    <div class="card dash-card" style="border-top-color: var(--danger);">
+                        <small><i class="fas fa-times-circle"></i> Ausentes</small>
+                        <h1 id="d-aus">0</h1>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3><i class="fas fa-chart-bar"></i> Resumo de Ausências:</h3>
+                    <div id="d-resumo-motivos" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;"></div>
+                </div>
+                
+                <h3><i class="fas fa-tasks"></i> Tarefas</h3>
+                <div class="grid-cards-3">
+                    <div class="card dash-card" style="border-top-color: var(--info);">
+                        <small>Total</small>
+                        <h1 id="d-total-tarefas">0</h1>
+                    </div>
+                    <div class="card dash-card" style="border-top-color: var(--warning);">
+                        <small>Pendentes</small>
+                        <h1 id="d-tarefas-pendentes">0</h1>
+                    </div>
+                    <div class="card dash-card" style="border-top-color: var(--success);">
+                        <small>Concluídas</small>
+                        <h1 id="d-tarefas-concluidas">0</h1>
+                    </div>
+                </div>
+                
+                <h3><i class="fas fa-exclamation-triangle"></i> CIEs</h3>
+                <div class="grid-cards-3">
+                    <div class="card dash-card" style="border-top-color: var(--cie);">
+                        <small>Total</small>
+                        <h1 id="d-total-cies">0</h1>
+                    </div>
+                    <div class="card dash-card" style="border-top-color: var(--warning);">
+                        <small>Hoje</small>
+                        <h1 id="d-cies-hoje">0</h1>
+                    </div>
+                    <div class="card dash-card" style="border-top-color: var(--danger);">
+                        <small>Abertas</small>
+                        <h1 id="d-cies-abertas">0</h1>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3><i class="fas fa-exclamation-circle"></i> Alertas por Função:</h3>
+                    <div id="d-alertas-funcao"></div>
+                </div>
+            </section>
+
+            <section id="ponto" class="tab-content">
+                <div class="card">
+                    <h3><i class="fas fa-calendar-day"></i> Ponto do Dia: <span id="data-atual"></span></h3>
+                    <input type="text" id="p-busca" placeholder="🔍 Filtrar por nome ou função..." onkeyup="renderPonto()" style="margin-bottom: 10px; width: 100%;">
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Funcionário</th>
+                                    <th>Função</th>
+                                    <th>Status</th>
+                                    <th>Tempo</th>
+                                </tr>
+                            </thead>
+                            <tbody id="p-lista"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="tarefas" class="tab-content">
+                <div class="card">
+                    <h3><i class="fas fa-plus-circle"></i> Nova Tarefa</h3>
+                    <form id="f-tarefa" class="form-group" onsubmit="salvarTarefa(event)">
+                        <input type="text" id="t-desc" placeholder="Descrição da Tarefa" required>
+                        <select id="t-resp" required>
+                            <option value="">Selecione um responsável</option>
+                        </select>
+                        <select id="t-prioridade" required>
+                            <option value="Baixa">Baixa Prioridade</option>
+                            <option value="Média" selected>Média Prioridade</option>
+                            <option value="Alta">Alta Prioridade</option>
+                        </select>
+                        <button type="submit" class="btn-add"><i class="fas fa-save"></i> Adicionar Tarefa</button>
+                    </form>
+                </div>
+                <div id="t-lista"></div>
+            </section>
+
+            <section id="equipe" class="tab-content">
+                <div class="card">
+                    <h3><i class="fas fa-user-plus"></i> Cadastrar Funcionário</h3>
+                 .table-responsive { width: 100%; overflow-x: auto; background: white; border-radius: 8px; margin-top: 10px; }
         table { width: 100%; border-collapse: collapse; min-width: 400px; }
         th { background: var(--secondary); color: white; padding: 10px; text-align: left; font-size: 0.8rem; }
         td { padding: 10px; border-bottom: 1px solid #eee; font-size: 0.85rem; }
@@ -1310,4 +1905,5 @@
         }, 60000);
     </script>
 </body>
+
 </html>
