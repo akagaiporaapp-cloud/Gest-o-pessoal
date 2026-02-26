@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>Logística Master - V15 Mobile</title>
+    <title>Logística Master - V15.1 Mobile Completo</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
@@ -14,7 +14,7 @@
         * { 
             box-sizing: border-box; 
             font-family: 'Segoe UI', sans-serif; 
-            -webkit-tap-highlight-color: transparent; /* Remove highlight on tap */
+            -webkit-tap-highlight-color: transparent;
         }
         
         body { 
@@ -23,10 +23,9 @@
             display: flex; 
             flex-direction: column; 
             height: 100vh; 
-            overflow: hidden; /* Mantém hidden no body */
+            overflow: hidden;
         }
         
-        /* Container principal com scroll nativo */
         #app-container {
             display: flex;
             flex: 1;
@@ -40,8 +39,8 @@
             flex-shrink: 0; 
             z-index: 100; 
             height: 100%;
-            overflow-y: auto; /* Sidebar com scroll próprio se necessário */
-            -webkit-overflow-scrolling: touch; /* Scroll suave no iOS */
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
         }
         
         .sidebar-header { 
@@ -90,13 +89,12 @@
         main { 
             flex: 1; 
             padding: 15px; 
-            overflow-y: auto; /* MAIN com scroll nativo */
-            -webkit-overflow-scrolling: touch; /* Scroll suave no iOS */
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
             height: 100%;
             position: relative;
         }
         
-        /* Botão flutuante para voltar ao topo */
         #scroll-top-btn {
             position: fixed;
             bottom: 20px;
@@ -115,16 +113,10 @@
             font-size: 20px;
             z-index: 1000;
             transition: all 0.3s;
-            -webkit-tap-highlight-color: transparent;
         }
         
         #scroll-top-btn.show {
             display: flex;
-        }
-        
-        #scroll-top-btn:hover {
-            transform: scale(1.1);
-            background: var(--primary);
         }
         
         #scroll-top-btn:active {
@@ -133,7 +125,7 @@
         
         .tab-content { 
             display: none; 
-            min-height: 100%; /* Garante altura mínima */
+            min-height: 100%;
         }
         
         .tab-content.active { 
@@ -166,15 +158,9 @@
             gap: 10px; 
         }
         
-        .grid-cards-4 { 
-            display: grid; 
-            grid-template-columns: repeat(2, 1fr); 
-            gap: 10px; 
-        }
-        
-        @media (min-width: 768px) {
-            .grid-cards-4 {
-                grid-template-columns: repeat(4, 1fr);
+        @media (max-width: 767px) {
+            .grid-cards-3 {
+                grid-template-columns: repeat(2, 1fr);
             }
         }
         
@@ -187,10 +173,6 @@
         .dash-card h1 { 
             margin: 5px 0; 
             font-size: 1.6rem; 
-        }
-        
-        .dash-card small { 
-            color: #666; 
         }
 
         .table-responsive { 
@@ -235,7 +217,7 @@
             padding: 14px; 
             border-radius: 8px; 
             border: 1px solid #ccc; 
-            font-size: 16px; /* 16px previne zoom no iOS */
+            font-size: 16px;
             -webkit-appearance: none;
             appearance: none;
         }
@@ -297,30 +279,11 @@
             display: inline-block;
         }
         
-        .badge-success { 
-            background: var(--success); 
-            color: white; 
-        }
-        
-        .badge-warning { 
-            background: var(--warning); 
-            color: white; 
-        }
-        
-        .badge-danger { 
-            background: var(--danger); 
-            color: white; 
-        }
-        
-        .badge-info { 
-            background: var(--info); 
-            color: white; 
-        }
-        
-        .badge-cie { 
-            background: var(--cie); 
-            color: white; 
-        }
+        .badge-success { background: var(--success); color: white; }
+        .badge-warning { background: var(--warning); color: white; }
+        .badge-danger { background: var(--danger); color: white; }
+        .badge-info { background: var(--info); color: white; }
+        .badge-cie { background: var(--cie); color: white; }
         
         .search-box { 
             display: flex; 
@@ -391,34 +354,6 @@
             transition: width 0.3s;
         }
         
-        .task-stats {
-            display: flex;
-            justify-content: space-around;
-            margin-top: 10px;
-            padding: 10px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        
-        .stat-item {
-            text-align: center;
-            flex: 1;
-            min-width: 80px;
-        }
-        
-        .stat-value {
-            font-size: 1.4rem;
-            font-weight: bold;
-        }
-        
-        .stat-label {
-            font-size: 0.8rem;
-            color: #666;
-        }
-        
-        /* Ajustes mobile */
         @media (max-width: 767px) {
             #app-container {
                 flex-direction: column;
@@ -430,11 +365,10 @@
                 max-height: 60px;
                 overflow-x: auto;
                 overflow-y: hidden;
-                -webkit-overflow-scrolling: touch;
             }
             
             .sidebar-header {
-                display: none; /* Esconde header no mobile para economizar espaço */
+                display: none;
             }
             
             .sidebar-menu {
@@ -459,19 +393,12 @@
                 padding: 10px;
             }
             
-            .grid-cards,
-            .grid-cards-3,
-            .grid-cards-4 {
+            .grid-cards {
                 gap: 8px;
             }
             
             .dash-card h1 {
                 font-size: 1.4rem;
-            }
-            
-            input, select, button, textarea {
-                padding: 12px;
-                font-size: 16px;
             }
             
             .search-box {
@@ -483,11 +410,6 @@
             .search-box button {
                 width: 100%;
             }
-        }
-
-        /* Pull to refresh suporte */
-        .tab-content {
-            overscroll-behavior: contain;
         }
     </style>
 </head>
@@ -527,25 +449,25 @@
                 <h3><i class="fas fa-users"></i> Equipe</h3>
                 <div class="grid-cards">
                     <div class="card dash-card" style="border-top-color: var(--accent);">
-                        <small><i class="fas fa-users"></i> Total</small>
+                        <small>Total</small>
                         <h1 id="d-total">0</h1>
                     </div>
                     <div class="card dash-card" style="border-top-color: var(--success);">
-                        <small><i class="fas fa-check-circle"></i> Presentes</small>
+                        <small>Presentes</small>
                         <h1 id="d-pres">0</h1>
                     </div>
                     <div class="card dash-card" style="border-top-color: var(--warning);">
-                        <small><i class="fas fa-exclamation-triangle"></i> Atrasos</small>
+                        <small>Atrasos</small>
                         <h1 id="d-atr">0</h1>
                     </div>
                     <div class="card dash-card" style="border-top-color: var(--danger);">
-                        <small><i class="fas fa-times-circle"></i> Ausentes</small>
+                        <small>Ausentes</small>
                         <h1 id="d-aus">0</h1>
                     </div>
                 </div>
                 
                 <div class="card">
-                    <h3><i class="fas fa-chart-bar"></i> Resumo de Ausências:</h3>
+                    <h3>Resumo de Ausências:</h3>
                     <div id="d-resumo-motivos" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;"></div>
                 </div>
                 
@@ -582,15 +504,15 @@
                 </div>
                 
                 <div class="card">
-                    <h3><i class="fas fa-exclamation-circle"></i> Alertas por Função:</h3>
+                    <h3>Alertas por Função:</h3>
                     <div id="d-alertas-funcao"></div>
                 </div>
             </section>
 
             <section id="ponto" class="tab-content">
                 <div class="card">
-                    <h3><i class="fas fa-calendar-day"></i> Ponto do Dia: <span id="data-atual"></span></h3>
-                    <input type="text" id="p-busca" placeholder="🔍 Filtrar por nome ou função..." onkeyup="renderPonto()" style="margin-bottom: 10px; width: 100%;">
+                    <h3>Ponto do Dia: <span id="data-atual"></span></h3>
+                    <input type="text" id="p-busca" placeholder="Filtrar por nome..." onkeyup="renderPonto()" style="margin-bottom: 10px; width: 100%;">
                     <div class="table-responsive">
                         <table>
                             <thead>
@@ -609,18 +531,18 @@
 
             <section id="tarefas" class="tab-content">
                 <div class="card">
-                    <h3><i class="fas fa-plus-circle"></i> Nova Tarefa</h3>
+                    <h3>Nova Tarefa</h3>
                     <form id="f-tarefa" class="form-group" onsubmit="salvarTarefa(event)">
                         <input type="text" id="t-desc" placeholder="Descrição da Tarefa" required>
                         <select id="t-resp" required>
                             <option value="">Selecione um responsável</option>
                         </select>
                         <select id="t-prioridade" required>
-                            <option value="Baixa">Baixa Prioridade</option>
-                            <option value="Média" selected>Média Prioridade</option>
-                            <option value="Alta">Alta Prioridade</option>
+                            <option value="Baixa">Baixa</option>
+                            <option value="Média" selected>Média</option>
+                            <option value="Alta">Alta</option>
                         </select>
-                        <button type="submit" class="btn-add"><i class="fas fa-save"></i> Adicionar Tarefa</button>
+                        <button type="submit" class="btn-add">Adicionar</button>
                     </form>
                 </div>
                 <div id="t-lista"></div>
@@ -628,12 +550,12 @@
 
             <section id="equipe" class="tab-content">
                 <div class="card">
-                    <h3><i class="fas fa-user-plus"></i> Cadastrar Funcionário</h3>
+                    <h3>Cadastrar Funcionário</h3>
                     <form id="f-equipe" class="form-group" onsubmit="salvarEquipe(event)">
-                        <input type="text" id="e-nome" placeholder="Nome Completo" required>
+                        <input type="text" id="e-nome" placeholder="Nome" required>
                         <input type="text" id="e-mat" placeholder="Matrícula" required>
                         <select id="e-fun" required>
-                            <option value="">Selecione a função</option>
+                            <option value="">Função</option>
                             <option value="Motorista">Motorista</option>
                             <option value="Motociclista">Motociclista</option>
                             <option value="Pedestre">Pedestre</option>
@@ -641,7 +563,7 @@
                             <option value="Interno">Interno</option>
                             <option value="Gestão">Gestão</option>
                         </select>
-                        <button type="submit" class="btn-add"><i class="fas fa-save"></i> Cadastrar</button>
+                        <button type="submit" class="btn-add">Cadastrar</button>
                     </form>
                 </div>
                 <div class="table-responsive">
@@ -661,20 +583,20 @@
 
             <section id="ocorrencias" class="tab-content">
                 <div class="card">
-                    <h3><i class="fas fa-plus-circle"></i> Nova CIE</h3>
+                    <h3>Nova CIE</h3>
                     <form id="f-cie" class="form-group" onsubmit="salvarCIE(event)">
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
                             <select id="cie-tipo" required>
                                 <option value="">Tipo</option>
-                                <option value="Acidente">🚗 Acidente</option>
-                                <option value="Avaria">📦 Avaria</option>
-                                <option value="Atraso">⏰ Atraso</option>
-                                <option value="Falta">❌ Falta</option>
-                                <option value="Problema Veículo">🔧 Problema</option>
-                                <option value="Cliente">👤 Cliente</option>
-                                <option value="Outros">📌 Outros</option>
+                                <option value="Acidente">Acidente</option>
+                                <option value="Avaria">Avaria</option>
+                                <option value="Atraso">Atraso</option>
+                                <option value="Falta">Falta</option>
+                                <option value="Problema Veículo">Problema</option>
+                                <option value="Cliente">Cliente</option>
+                                <option value="Outros">Outros</option>
                             </select>
-                            <input type="text" id="cie-numero" placeholder="Número da CIE">
+                            <input type="text" id="cie-numero" placeholder="Número CIE">
                         </div>
                         
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
@@ -683,32 +605,29 @@
                             </select>
                             <select id="cie-impacto" required>
                                 <option value="">Impacto</option>
-                                <option value="Baixo">⬇️ Baixo</option>
-                                <option value="Médio" selected>📊 Médio</option>
-                                <option value="Alto">⬆️ Alto</option>
-                                <option value="Crítico">⚠️ Crítico</option>
+                                <option value="Baixo">Baixo</option>
+                                <option value="Médio" selected>Médio</option>
+                                <option value="Alto">Alto</option>
+                                <option value="Crítico">Crítico</option>
                             </select>
                         </div>
                         
-                        <textarea id="cie-descricao" placeholder="Descrição detalhada..." required></textarea>
+                        <textarea id="cie-descricao" placeholder="Descrição..." required></textarea>
                         
-                        <button type="submit" class="btn-cie"><i class="fas fa-save"></i> REGISTRAR CIE</button>
+                        <button type="submit" class="btn-cie">REGISTRAR</button>
                     </form>
                 </div>
                 
                 <div class="card">
-                    <h3><i class="fas fa-search"></i> Filtrar CIEs</h3>
+                    <h3>Filtrar CIEs</h3>
                     <div class="search-box">
                         <input type="text" id="cie-busca" placeholder="Buscar..." onkeyup="renderCIEs()">
                         <select id="cie-filtro-tipo" onchange="renderCIEs()">
-                            <option value="">Todos os tipos</option>
+                            <option value="">Todos</option>
                             <option value="Acidente">Acidente</option>
                             <option value="Avaria">Avaria</option>
                             <option value="Atraso">Atraso</option>
                             <option value="Falta">Falta</option>
-                            <option value="Problema Veículo">Problema</option>
-                            <option value="Cliente">Cliente</option>
-                            <option value="Outros">Outros</option>
                         </select>
                     </div>
                 </div>
@@ -718,12 +637,12 @@
 
             <section id="historico" class="tab-content">
                 <div class="card">
-                    <h4><i class="fas fa-search"></i> Consultar Registros</h4>
+                    <h4>Consultar Registros</h4>
                     <div class="search-box">
-                        <input type="date" id="h-data-busca" class="form-control">
-                        <input type="text" id="h-func-busca" placeholder="Funcionário...">
-                        <button onclick="buscarHistorico()" class="btn-add">CONSULTAR</button>
-                        <button onclick="carregarHistoricoHoje()" class="btn-info">HOJE</button>
+                        <input type="date" id="h-data-busca">
+                        <input type="text" id="h-func-busca" placeholder="Funcionário">
+                        <button onclick="buscarHistorico()" class="btn-add">Consultar</button>
+                        <button onclick="carregarHistoricoHoje()" class="btn-info">Hoje</button>
                     </div>
                 </div>
                 <div id="h-resultado"></div>
@@ -733,16 +652,16 @@
                 <div class="card">
                     <h4>Limites de Ausência</h4>
                     <div id="c-lista-limites" class="form-group"></div>
-                    <button onclick="salvarLimites()" class="btn-add" style="margin-top:10px">SALVAR LIMITES</button>
+                    <button onclick="salvarLimites()" class="btn-add">Salvar Limites</button>
                 </div>
                 <div class="card">
                     <h4>Backup</h4>
                     <div class="form-group">
                         <button onclick="forcarDownloadBackup()" style="background:var(--primary); color:white;">
-                            EXPORTAR BACKUP
+                            Exportar Backup
                         </button>
                         <button onclick="document.getElementById('in-file').click()" style="background:var(--secondary); color:white;">
-                            IMPORTAR BACKUP
+                            Importar Backup
                         </button>
                         <input type="file" id="in-file" style="display: none;" accept=".json" onchange="importarBackup(this)">
                     </div>
@@ -751,13 +670,13 @@
                     <h4>Gerenciar Espaço</h4>
                     <div class="form-group">
                         <button onclick="limparHistoricoAntigo()" class="btn-warning">
-                            LIMPAR HISTÓRICO ANTIGO
+                            Limpar Histórico Antigo
                         </button>
                         <button onclick="compactarDados()" class="btn-info">
-                            COMPACTAR DADOS
+                            Compactar Dados
                         </button>
                         <button onclick="limparTudo()" style="background:var(--danger); color:white;">
-                            LIMPAR TUDO
+                            Limpar Tudo
                         </button>
                     </div>
                 </div>
@@ -769,72 +688,33 @@
         // CONSTANTES
         const CATS = ["Motorista", "Motociclista", "Pedestre", "Bicicleta", "Interno", "Gestão"];
         const MOTIVOS = ["Falta", "Atestado", "Licença", "Férias", "Serviço externo"];
-        const MAX_STORAGE_SIZE = 5 * 1024 * 1024; // 5MB
+        const MAX_STORAGE_SIZE = 5 * 1024 * 1024;
 
-        // CONTROLE DE SCROLL
+        // ELEMENTOS
         const mainContent = document.getElementById('main-content');
         const scrollBtn = document.getElementById('scroll-top-btn');
 
-        // Monitorar scroll para mostrar/esconder botão
-        mainContent.addEventListener('scroll', function() {
-            if (this.scrollTop > 300) {
-                scrollBtn.classList.add('show');
-            } else {
-                scrollBtn.classList.remove('show');
-            }
-        });
-
-        // Função para scroll suave ao topo
-        function scrollToTop() {
-            mainContent.scrollTo({
-                top: 0,
-                behavior: 'smooth'
+        // CONTROLE DE SCROLL
+        if (mainContent) {
+            mainContent.addEventListener('scroll', function() {
+                if (this.scrollTop > 300) {
+                    scrollBtn.classList.add('show');
+                } else {
+                    scrollBtn.classList.remove('show');
+                }
             });
         }
 
-        // Suporte a swipe para voltar (Android/iOS)
-        let touchStart = null;
-        mainContent.addEventListener('touchstart', function(e) {
-            touchStart = {
-                x: e.touches[0].clientX,
-                y: e.touches[0].clientY,
-                scrollTop: this.scrollTop
-            };
-        });
-
-        mainContent.addEventListener('touchmove', function(e) {
-            if (!touchStart) return;
-            
-            const touchY = e.touches[0].clientY;
-            const diffY = touchY - touchStart.y;
-            
-            // Se estiver no topo e tentar scrollar para baixo, prevenir
-            if (this.scrollTop <= 0 && diffY > 0) {
-                e.preventDefault();
+        function scrollToTop() {
+            if (mainContent) {
+                mainContent.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
             }
-            
-            // Se estiver no fim e tentar scrollar para cima, prevenir
-            if (this.scrollTop + this.clientHeight >= this.scrollHeight - 10 && diffY < 0) {
-                e.preventDefault();
-            }
-        });
+        }
 
-        // INICIALIZAÇÃO
-        document.addEventListener('DOMContentLoaded', () => {
-            inicializarEstrutura();
-            verificarViradaDeDia();
-            atualizarDataAtual();
-            verificarEspacoArmazenamento();
-            showTab('dashboard');
-        });
-
-        // [Todas as suas funções JavaScript existentes aqui - mantive igual]
-        // Função get, set, renderPonto, attPonto, etc.
-        
-        // Por brevidade, vou manter suas funções existentes aqui
-        // (copie e cole todas as funções que você já tinha)
-        
-        // Exemplo das funções principais:
+        // FUNÇÕES DE STORAGE
         function get(key) {
             try {
                 const value = localStorage.getItem(key);
@@ -869,23 +749,688 @@
             }
         }
 
-        // Função para atualizar select de funcionários nas CIEs
+        // FUNÇÕES DE ESPAÇO
+        function calcularTamanhoStorage() {
+            let total = 0;
+            for (let key in localStorage) {
+                if (localStorage.hasOwnProperty(key)) {
+                    total += (localStorage[key].length * 2);
+                }
+            }
+            return total;
+        }
+
+        function verificarEspacoArmazenamento() {
+            const usado = calcularTamanhoStorage();
+            const percentual = (usado / MAX_STORAGE_SIZE) * 100;
+            
+            const warning = document.getElementById('storage-warning');
+            const fill = document.getElementById('storage-fill');
+            const text = document.getElementById('storage-text');
+            
+            if (percentual > 70 && warning) {
+                warning.style.display = 'flex';
+                fill.style.width = Math.min(percentual, 100) + '%';
+                text.textContent = `${(usado / 1024 / 1024).toFixed(2)}MB / 5MB (${percentual.toFixed(1)}%)`;
+                
+                if (percentual > 90) {
+                    fill.style.background = 'var(--danger)';
+                } else {
+                    fill.style.background = 'var(--warning)';
+                }
+            } else if (warning) {
+                warning.style.display = 'none';
+            }
+        }
+
+        function limparHistoricoAntigo() {
+            if (confirm('Remover registros com mais de 30 dias?')) {
+                const historico = get('db_historico') || [];
+                const dataLimite = new Date();
+                dataLimite.setDate(dataLimite.getDate() - 30);
+                
+                const historicoFiltrado = historico.filter(item => {
+                    if (!item.data) return false;
+                    const dataItem = new Date(item.data.split('-').join('/'));
+                    return dataItem >= dataLimite;
+                });
+                
+                if (set('db_historico', historicoFiltrado)) {
+                    alert('Histórico removido!');
+                    verificarEspacoArmazenamento();
+                }
+            }
+        }
+
+        function compactarDados() {
+            try {
+                const historico = get('db_historico') || [];
+                const historicoCompactado = historico.map(dia => ({
+                    d: dia.data,
+                    p: dia.pontos.map(p => ({
+                        n: p.nome,
+                        s: p.status,
+                        t: p.tempo || ''
+                    }))
+                }));
+                set('db_historico', historicoCompactado);
+                alert('Dados compactados!');
+            } catch (e) {
+                alert('Erro ao compactar.');
+            }
+        }
+
+        // INICIALIZAÇÃO
+        function inicializarEstrutura() {
+            if (!localStorage.getItem('db_historico')) set('db_historico', []);
+            if (!localStorage.getItem('db_cies')) set('db_cies', []);
+            if (!localStorage.getItem('db_limites')) {
+                let limites = {};
+                CATS.forEach(cat => limites[cat] = 0);
+                set('db_limites', limites);
+            }
+            if (!localStorage.getItem('db_ponto')) set('db_ponto', {});
+            if (!localStorage.getItem('ultima_data')) {
+                localStorage.setItem('ultima_data', new Date().toISOString().split('T')[0]);
+            }
+        }
+
+        // NAVEGAÇÃO
+        function showTab(id) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.sidebar-menu li').forEach(l => l.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            
+            const li = Array.from(document.querySelectorAll('.sidebar-menu li')).find(li => 
+                li.textContent.toLowerCase().includes(id.toLowerCase())
+            );
+            if(li) li.classList.add('active');
+
+            switch(id) {
+                case 'dashboard': renderDashboard(); break;
+                case 'equipe': renderEquipe(); break;
+                case 'ponto': renderPonto(); break;
+                case 'tarefas': renderTarefas(); break;
+                case 'ocorrencias': 
+                    atualizarSelectFuncionarios();
+                    renderCIEs();
+                    break;
+                case 'historico':
+                    document.getElementById('h-data-busca').value = new Date().toISOString().split('T')[0];
+                    break;
+                case 'configuracoes': renderConfigs(); break;
+            }
+            
+            verificarEspacoArmazenamento();
+        }
+
+        // EQUIPE
+        function salvarEquipe(e) {
+            e.preventDefault();
+            const list = get('db_equipe') || [];
+            const novoFunc = {
+                nome: document.getElementById('e-nome').value.trim(),
+                mat: document.getElementById('e-mat').value.trim(),
+                fun: document.getElementById('e-fun').value
+            };
+            
+            if (!novoFunc.nome || !novoFunc.mat || !novoFunc.fun) {
+                alert('Preencha todos os campos!');
+                return;
+            }
+            
+            if (list.some(f => f.mat === novoFunc.mat)) {
+                alert('Matrícula já existe!');
+                return;
+            }
+            
+            list.push(novoFunc);
+            if (set('db_equipe', list)) {
+                e.target.reset();
+                renderEquipe();
+                alert('Funcionário cadastrado!');
+            }
+        }
+
+        function renderEquipe() {
+            const equipe = get('db_equipe') || [];
+            document.getElementById('e-lista').innerHTML = equipe.map((f, i) => 
+                `<tr>
+                    <td>${f.mat || ''}</td>
+                    <td>${f.nome || ''}</td>
+                    <td><span class="badge" style="background:var(--accent);">${f.fun || ''}</span></td>
+                    <td><button onclick="removerEquipe(${i})" class="btn-danger">X</button></td>
+                </tr>`
+            ).join('');
+        }
+
+        function removerEquipe(index) {
+            if (confirm('Remover funcionário?')) {
+                const equipe = get('db_equipe') || [];
+                equipe.splice(index, 1);
+                set('db_equipe', equipe);
+                renderEquipe();
+                renderPonto();
+            }
+        }
+
+        // PONTO
+        function renderPonto() {
+            const equipe = get('db_equipe') || [];
+            const ponto = get('db_ponto') || {};
+            const busca = document.getElementById('p-busca').value.toLowerCase();
+            
+            const equipeFiltrada = equipe.filter(f => 
+                f && (f.nome?.toLowerCase().includes(busca) || f.fun?.toLowerCase().includes(busca))
+            );
+            
+            document.getElementById('p-lista').innerHTML = equipeFiltrada.map(f => {
+                const registro = ponto[f.mat] || { status: "Presente", tempo: "" };
+                
+                return `<tr>
+                    <td><strong>${f.nome || ''}</strong><br><small>${f.mat}</small></td>
+                    <td>${f.fun || ''}</td>
+                    <td>
+                        <select onchange="attPonto('${f.mat}', this.value)" style="width:100%;">
+                            <option value="Presente" ${registro.status === 'Presente' ? 'selected' : ''}>Presente</option>
+                            <option value="Atraso" ${registro.status === 'Atraso' ? 'selected' : ''}>Atraso</option>
+                            ${MOTIVOS.map(m => `<option value="${m}" ${registro.status === m ? 'selected' : ''}>${m}</option>`).join('')}
+                        </select>
+                    </td>
+                    <td>
+                        <input type="text" placeholder="Minutos" value="${registro.tempo || ''}" 
+                               onchange="attTempo('${f.mat}', this.value)" 
+                               style="width:100%; ${registro.status !== 'Atraso' ? 'display:none;' : ''}">
+                    </td>
+                </tr>`;
+            }).join('');
+        }
+
+        function attPonto(matricula, status) {
+            const ponto = get('db_ponto') || {};
+            ponto[matricula] = {
+                status: status,
+                tempo: ponto[matricula]?.tempo || ""
+            };
+            set('db_ponto', ponto);
+            renderPonto();
+            renderDashboard();
+        }
+
+        function attTempo(matricula, tempo) {
+            const ponto = get('db_ponto') || {};
+            if (ponto[matricula]) {
+                ponto[matricula].tempo = tempo;
+                set('db_ponto', ponto);
+            }
+        }
+
+        // TAREFAS
+        function salvarTarefa(e) {
+            e.preventDefault();
+            const list = get('db_tarefas') || [];
+            list.push({
+                desc: document.getElementById('t-desc').value,
+                resp: document.getElementById('t-resp').value,
+                prioridade: document.getElementById('t-prioridade').value,
+                status: 'Pendente',
+                dataCriacao: new Date().toISOString().split('T')[0]
+            });
+            set('db_tarefas', list);
+            e.target.reset();
+            renderTarefas();
+            alert('Tarefa salva!');
+        }
+
+        function renderTarefas() {
+            const equipe = get('db_equipe') || [];
+            const tarefas = get('db_tarefas') || [];
+            
+            const selectResp = document.getElementById('t-resp');
+            if (selectResp) {
+                selectResp.innerHTML = '<option value="">Responsável</option>' + 
+                    equipe.map(f => `<option value="${f.nome}">${f.nome}</option>`).join('');
+            }
+            
+            document.getElementById('t-lista').innerHTML = tarefas.map((t, i) => {
+                const cor = t.prioridade === 'Alta' ? 'var(--danger)' : 
+                           t.prioridade === 'Média' ? 'var(--warning)' : 'var(--success)';
+                
+                return `
+                    <div class="card" style="border-left:5px solid ${cor}">
+                        <div style="display:flex; justify-content:space-between">
+                            <div>
+                                <strong>${t.desc}</strong><br>
+                                <small>Resp: ${t.resp}</small>
+                            </div>
+                            <button onclick="removerTarefa(${i})" class="btn-danger">X</button>
+                        </div>
+                        <select onchange="attStatusTarefa(${i}, this.value)" style="margin-top:10px; width:100%">
+                            <option value="Pendente" ${t.status === 'Pendente' ? 'selected' : ''}>Pendente</option>
+                            <option value="Em andamento" ${t.status === 'Em andamento' ? 'selected' : ''}>Andamento</option>
+                            <option value="Concluída" ${t.status === 'Concluída' ? 'selected' : ''}>Concluída</option>
+                        </select>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function attStatusTarefa(index, status) {
+            const tarefas = get('db_tarefas') || [];
+            tarefas[index].status = status;
+            set('db_tarefas', tarefas);
+            renderTarefas();
+        }
+
+        function removerTarefa(index) {
+            if (confirm('Remover tarefa?')) {
+                const tarefas = get('db_tarefas') || [];
+                tarefas.splice(index, 1);
+                set('db_tarefas', tarefas);
+                renderTarefas();
+            }
+        }
+
+        // CIEs
         function atualizarSelectFuncionarios() {
             const select = document.getElementById('cie-funcionario');
             if (!select) return;
             
             const equipe = get('db_equipe') || [];
-            select.innerHTML = '<option value="">Funcionário (opcional)</option>' + 
-                equipe.map(f => `<option value="${f.nome}">${f.nome} (${f.fun})</option>`).join('');
+            select.innerHTML = '<option value="">Funcionário</option>' + 
+                equipe.map(f => `<option value="${f.nome}">${f.nome}</option>`).join('');
         }
 
-        // [Copie aqui TODAS as suas outras funções existentes]
-        // calcularTamanhoStorage, verificarEspacoArmazenamento, inicializarEstrutura,
-        // renderDashboard, renderPonto, attPonto, attTempo, salvarCIE, renderCIEs,
-        // salvarTarefa, renderTarefas, etc.
-        
-        // Para não repetir tudo aqui, mantenha suas funções originais
-        // e apenas adicione as novas funções de scroll e as modificações acima
+        function salvarCIE(e) {
+            e.preventDefault();
+            
+            const cies = get('db_cies') || [];
+            const hoje = new Date().toISOString().split('T')[0];
+            
+            const novaCIE = {
+                id: Date.now(),
+                numero: document.getElementById('cie-numero').value || `CIE-${Date.now()}`,
+                tipo: document.getElementById('cie-tipo').value,
+                funcionario: document.getElementById('cie-funcionario').value || 'Não informado',
+                impacto: document.getElementById('cie-impacto').value,
+                descricao: document.getElementById('cie-descricao').value,
+                data: hoje,
+                hora: new Date().toLocaleTimeString('pt-BR'),
+                status: 'Aberta'
+            };
+            
+            cies.push(novaCIE);
+            set('db_cies', cies);
+            document.getElementById('f-cie').reset();
+            renderCIEs();
+            renderDashboard();
+            alert('CIE registrada!');
+        }
+
+        function renderCIEs() {
+            const cies = get('db_cies') || [];
+            const busca = document.getElementById('cie-busca')?.value.toLowerCase() || '';
+            const filtroTipo = document.getElementById('cie-filtro-tipo')?.value || '';
+            
+            let ciesFiltradas = cies.sort((a, b) => new Date(b.data) - new Date(a.data));
+            
+            if (busca) {
+                ciesFiltradas = ciesFiltradas.filter(c => 
+                    c.numero?.toLowerCase().includes(busca) ||
+                    c.descricao?.toLowerCase().includes(busca)
+                );
+            }
+            
+            if (filtroTipo) {
+                ciesFiltradas = ciesFiltradas.filter(c => c.tipo === filtroTipo);
+            }
+            
+            const container = document.getElementById('cie-lista');
+            
+            if (ciesFiltradas.length === 0) {
+                container.innerHTML = '<div class="card">Nenhuma CIE encontrada.</div>';
+                return;
+            }
+            
+            container.innerHTML = ciesFiltradas.map(c => `
+                <div class="card cie-item">
+                    <div style="display:flex; justify-content:space-between">
+                        <span class="cie-number">${c.numero}</span>
+                        <span class="badge badge-cie">${c.tipo}</span>
+                    </div>
+                    <p><strong>${c.descricao}</strong></p>
+                    <p><small>Func: ${c.funcionario} | Impacto: ${c.impacto}</small></p>
+                    <p><small>Data: ${new Date(c.data).toLocaleDateString('pt-BR')}</small></p>
+                    <div style="display:flex; gap:5px; margin-top:10px;">
+                        <button onclick="resolverCIE(${c.id})" class="btn-success" style="flex:1;">Resolver</button>
+                        <button onclick="excluirCIE(${c.id})" class="btn-danger">X</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function resolverCIE(id) {
+            const resolucao = prompt('Descreva a resolução:');
+            if (resolucao) {
+                const cies = get('db_cies') || [];
+                const index = cies.findIndex(c => c.id === id);
+                if (index !== -1) {
+                    cies[index].status = 'Resolvida';
+                    cies[index].resolucao = resolucao;
+                    set('db_cies', cies);
+                    renderCIEs();
+                    renderDashboard();
+                }
+            }
+        }
+
+        function excluirCIE(id) {
+            if (confirm('Excluir CIE?')) {
+                const cies = get('db_cies') || [];
+                const novas = cies.filter(c => c.id !== id);
+                set('db_cies', novas);
+                renderCIEs();
+                renderDashboard();
+            }
+        }
+
+        // DASHBOARD
+        function renderDashboard() {
+            const equipe = get('db_equipe') || [];
+            const ponto = get('db_ponto') || {};
+            const limites = get('db_limites') || {};
+            const tarefas = get('db_tarefas') || [];
+            const cies = get('db_cies') || [];
+            
+            // Status equipe
+            let status = {
+                Presente: 0, Atraso: 0, Falta: 0, Atestado: 0, 
+                Licença: 0, Férias: 0, "Serviço externo": 0
+            };
+            
+            equipe.forEach(f => {
+                if (f && f.mat) {
+                    const s = ponto[f.mat]?.status || "Presente";
+                    status[s] = (status[s] || 0) + 1;
+                }
+            });
+            
+            const totalAusentes = MOTIVOS.reduce((acc, m) => acc + (status[m] || 0), 0);
+            
+            document.getElementById('d-total').innerText = equipe.length;
+            document.getElementById('d-pres').innerText = equipe.length - totalAusentes - (status.Atraso || 0);
+            document.getElementById('d-atr').innerText = status.Atraso || 0;
+            document.getElementById('d-aus').innerText = totalAusentes;
+            
+            document.getElementById('d-resumo-motivos').innerHTML = MOTIVOS.map(m => 
+                `<div><strong>${m}:</strong> ${status[m] || 0}</div>`
+            ).join('');
+            
+            // Tarefas
+            const pendentes = tarefas.filter(t => t.status === 'Pendente' || t.status === 'Em andamento').length;
+            const concluidas = tarefas.filter(t => t.status === 'Concluída').length;
+            
+            document.getElementById('d-total-tarefas').innerText = tarefas.length;
+            document.getElementById('d-tarefas-pendentes').innerText = pendentes;
+            document.getElementById('d-tarefas-concluidas').innerText = concluidas;
+            
+            // CIEs
+            const hoje = new Date().toISOString().split('T')[0];
+            const ciesHoje = cies.filter(c => c.data === hoje).length;
+            const ciesAbertas = cies.filter(c => c.status === 'Aberta').length;
+            
+            document.getElementById('d-total-cies').innerText = cies.length;
+            document.getElementById('d-cies-hoje').innerText = ciesHoje;
+            document.getElementById('d-cies-abertas').innerText = ciesAbertas;
+            
+            // Alertas
+            const alertas = document.getElementById('d-alertas-funcao');
+            let alertasHTML = '';
+            
+            CATS.forEach(cat => {
+                const ausentes = equipe.filter(f => 
+                    f && f.fun === cat && MOTIVOS.includes(ponto[f.mat]?.status)
+                ).length;
+                
+                if (limites[cat] > 0 && ausentes >= limites[cat]) {
+                    alertasHTML += `<div style="background:var(--warning); padding:10px; margin:5px 0; color:white;">
+                        ${cat}: ${ausentes} ausentes (limite ${limites[cat]})
+                    </div>`;
+                }
+            });
+            
+            alertas.innerHTML = alertasHTML || 'Nenhum alerta';
+            
+            // Alertas CIE críticas
+            const ciesCriticas = cies.filter(c => c.impacto === 'Crítico' && c.status === 'Aberta');
+            const cieAlertas = document.getElementById('cie-alertas-dashboard');
+            
+            if (ciesCriticas.length > 0) {
+                cieAlertas.innerHTML = ciesCriticas.map(c => `
+                    <div class="cie-alert">
+                        <strong>CIE Crítica: ${c.numero}</strong> - ${c.descricao.substring(0,50)}
+                        <button onclick="showTab('ocorrencias')" class="btn-warning">Ver</button>
+                    </div>
+                `).join('');
+            } else {
+                cieAlertas.innerHTML = '';
+            }
+        }
+
+        // HISTÓRICO
+        function carregarHistoricoHoje() {
+            const hoje = new Date().toISOString().split('T')[0];
+            document.getElementById('h-data-busca').value = hoje;
+            document.getElementById('h-func-busca').value = '';
+            buscarHistorico();
+        }
+
+        function buscarHistorico() {
+            const dataBusca = document.getElementById('h-data-busca').value;
+            const funcBusca = document.getElementById('h-func-busca').value.toLowerCase();
+            
+            let historico = get('db_historico') || [];
+            
+            // Descompactar
+            if (historico.length > 0 && historico[0].d) {
+                historico = historico.map(dia => ({
+                    data: dia.d,
+                    pontos: dia.p.map(p => ({
+                        nome: p.n,
+                        status: p.s,
+                        tempo: p.t || ''
+                    }))
+                }));
+            }
+            
+            let resultados = [];
+            if (dataBusca) {
+                const registro = historico.find(h => h.data === dataBusca);
+                if (registro) resultados = registro.pontos.map(p => ({...p, data: registro.data}));
+            } else {
+                resultados = historico.flatMap(h => (h.pontos || []).map(p => ({...p, data: h.data})));
+            }
+            
+            if (funcBusca) {
+                resultados = resultados.filter(r => r.nome?.toLowerCase().includes(funcBusca));
+            }
+            
+            const container = document.getElementById('h-resultado');
+            
+            if (resultados.length === 0) {
+                container.innerHTML = '<div class="card">Nenhum registro encontrado.</div>';
+                return;
+            }
+            
+            const agrupado = {};
+            resultados.forEach(r => {
+                if (!agrupado[r.data]) agrupado[r.data] = [];
+                agrupado[r.data].push(r);
+            });
+            
+            let html = '';
+            for (let data in agrupado) {
+                html += `
+                    <div class="card">
+                        <h4>${new Date(data).toLocaleDateString('pt-BR')}</h4>
+                        <table>
+                            <thead><tr><th>Nome</th><th>Status</th></tr></thead>
+                            <tbody>
+                                ${agrupado[data].map(p => `
+                                    <tr>
+                                        <td>${p.nome}</td>
+                                        <td><span class="badge ${p.status === 'Presente' ? 'badge-success' : 'badge-danger'}">${p.status}</span></td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            }
+            
+            container.innerHTML = html;
+        }
+
+        // CONFIGURAÇÕES
+        function renderConfigs() {
+            const limites = get('db_limites') || {};
+            document.getElementById('c-lista-limites').innerHTML = CATS.map(f => `
+                <div style="display:flex; justify-content:space-between; padding:5px 0;">
+                    <label>${f}</label>
+                    <input type="number" id="lim-${f}" value="${limites[f] || 0}" style="width:70px;">
+                </div>
+            `).join('');
+        }
+
+        function salvarLimites() {
+            let limites = {};
+            CATS.forEach(f => {
+                const input = document.getElementById(`lim-${f}`);
+                limites[f] = parseInt(input.value) || 0;
+            });
+            set('db_limites', limites);
+            alert('Limites salvos!');
+            renderDashboard();
+        }
+
+        // BACKUP
+        function forcarDownloadBackup() {
+            try {
+                const backup = {
+                    db_equipe: get('db_equipe'),
+                    db_tarefas: get('db_tarefas'),
+                    db_ponto: get('db_ponto'),
+                    db_limites: get('db_limites'),
+                    db_historico: get('db_historico'),
+                    db_cies: get('db_cies'),
+                    ultima_data: localStorage.getItem('ultima_data'),
+                    data_backup: new Date().toISOString()
+                };
+                
+                const agora = new Date();
+                const dataHora = `${agora.getFullYear()}-${String(agora.getMonth()+1).padStart(2,'0')}-${String(agora.getDate()).padStart(2,'0')}_${String(agora.getHours()).padStart(2,'0')}-${String(agora.getMinutes()).padStart(2,'0')}-${String(agora.getSeconds()).padStart(2,'0')}`;
+                
+                const json = JSON.stringify(backup, null, 2);
+                const blob = new Blob([json], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                
+                link.href = url;
+                link.download = `LOGISTICA_BACKUP_${dataHora}.json`;
+                link.click();
+                
+                setTimeout(() => URL.revokeObjectURL(url), 100);
+                alert('Backup exportado!');
+            } catch (e) {
+                alert('Erro no backup.');
+            }
+        }
+
+        function importarBackup(input) {
+            if (!input.files?.[0]) return;
+            
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const dados = JSON.parse(e.target.result);
+                    
+                    if (dados.db_equipe) set('db_equipe', dados.db_equipe);
+                    if (dados.db_tarefas) set('db_tarefas', dados.db_tarefas);
+                    if (dados.db_ponto) set('db_ponto', dados.db_ponto);
+                    if (dados.db_limites) set('db_limites', dados.db_limites);
+                    if (dados.db_historico) set('db_historico', dados.db_historico);
+                    if (dados.db_cies) set('db_cies', dados.db_cies);
+                    
+                    alert('Backup restaurado!');
+                    location.reload();
+                } catch (erro) {
+                    alert('Arquivo inválido.');
+                }
+            };
+            reader.readAsText(input.files[0]);
+        }
+
+        function limparTudo() {
+            if (confirm('Apagar TODOS os dados?')) {
+                localStorage.clear();
+                inicializarEstrutura();
+                location.reload();
+            }
+        }
+
+        function atualizarDataAtual() {
+            const elem = document.getElementById('data-atual');
+            if (elem) {
+                elem.textContent = new Date().toLocaleDateString('pt-BR');
+            }
+        }
+
+        function verificarViradaDeDia() {
+            const hoje = new Date().toISOString().split('T')[0];
+            const ultima = localStorage.getItem('ultima_data');
+            
+            if (ultima && ultima !== hoje) {
+                const equipe = get('db_equipe') || [];
+                const ponto = get('db_ponto') || {};
+                
+                if (equipe.length > 0) {
+                    const historico = get('db_historico') || [];
+                    historico.push({
+                        data: ultima,
+                        pontos: equipe.map(f => ({
+                            nome: f.nome,
+                            status: ponto[f.mat]?.status || "Presente",
+                            tempo: ponto[f.mat]?.tempo || ""
+                        }))
+                    });
+                    set('db_historico', historico);
+                }
+                
+                set('db_ponto', {});
+                localStorage.setItem('ultima_data', hoje);
+                
+                // Resetar tarefas
+                const tarefas = get('db_tarefas') || [];
+                if (tarefas.length > 0) {
+                    set('db_tarefas', tarefas.map(t => ({...t, status: 'Pendente'})));
+                }
+            }
+        }
+
+        // INICIALIZAÇÃO
+        document.addEventListener('DOMContentLoaded', () => {
+            inicializarEstrutura();
+            verificarViradaDeDia();
+            atualizarDataAtual();
+            verificarEspacoArmazenamento();
+            showTab('dashboard');
+        });
+
+        // Verificação periódica
+        setInterval(() => {
+            verificarViradaDeDia();
+            verificarEspacoArmazenamento();
+        }, 60000);
     </script>
 </body>
 </html>
