@@ -3,14 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>Logística Master - V17 Mobile Completo</title>
+    <title>Logística Master - V19 Backup Funcional</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
             --primary: #2c3e50; --secondary: #34495e; --accent: #3498db;
             --bg: #f4f7f6; --danger: #e74c3c; --success: #2ecc71; --warning: #f39c12;
-            --info: #3498db; --dark: #2c3e50; --cie: #9b59b6;
+            --info: #3498db; --dark: #2c3e50; --cie: #9b59b6; --whatsapp: #25D366;
         }
+        
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #1a1a1a;
+                --dark: #ffffff;
+            }
+            body { color: #ffffff; }
+            .card { background: #2d2d2d; color: #ffffff; }
+            input, select, textarea { background: #3d3d3d; color: #ffffff; border-color: #555; }
+            .dash-card small { color: #aaa; }
+        }
+        
         * { 
             box-sizing: border-box; 
             font-family: 'Segoe UI', sans-serif; 
@@ -96,7 +108,6 @@
             position: relative;
         }
         
-        /* Barra de progresso */
         .scroll-progress {
             position: sticky;
             top: 0;
@@ -114,7 +125,6 @@
             transition: width 0.1s;
         }
         
-        /* Controles de scroll */
         .scroll-controls {
             position: fixed;
             bottom: 20px;
@@ -149,28 +159,6 @@
             transform: scale(0.9);
         }
         
-        .scroll-btn.up { background: var(--accent); }
-        .scroll-btn.down { background: var(--secondary); }
-        
-        /* Indicador de posição */
-        .scroll-position {
-            position: fixed;
-            bottom: 80px;
-            right: 20px;
-            background: var(--dark);
-            color: white;
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            display: none;
-            z-index: 999;
-        }
-        
-        .scroll-position.show {
-            display: block;
-        }
-        
-        /* Quick actions */
         .quick-actions {
             display: flex;
             gap: 8px;
@@ -308,6 +296,7 @@
         .btn-warning { background: var(--warning); color: white; border: none; }
         .btn-info { background: var(--info); color: white; border: none; }
         .btn-cie { background: var(--cie); color: white; border: none; }
+        .btn-whatsapp { background: var(--whatsapp); color: white; border: none; }
         
         .badge { 
             padding: 4px 10px; 
@@ -394,83 +383,80 @@
             transition: width 0.3s;
         }
         
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            max-width: 400px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .share-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .share-option {
+            padding: 15px;
+            border-radius: 8px;
+            color: white;
+            text-align: center;
+            cursor: pointer;
+            border: none;
+            font-size: 1rem;
+        }
+        
+        .share-option i { font-size: 24px; margin-bottom: 5px; }
+        .share-option.whatsapp { background: #25D366; }
+        .share-option.email { background: #EA4335; }
+        .share-option.copy { background: var(--secondary); }
+        .share-option.download { background: var(--primary); }
+        
+        .close-modal {
+            background: var(--danger);
+            color: white;
+            border: none;
+            padding: 10px;
+            width: 100%;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        
         @media (max-width: 767px) {
-            #app-container {
-                flex-direction: column;
-            }
-            
-            nav.sidebar {
-                width: 100%;
-                height: auto;
-                max-height: none;
-                overflow-x: auto;
-                overflow-y: hidden;
-            }
-            
-            .sidebar-header {
-                display: none;
-            }
-            
-            .sidebar-menu {
-                flex-direction: row;
-                padding: 5px;
-                white-space: nowrap;
-            }
-            
-            .sidebar-menu li {
-                display: inline-flex;
-                padding: 10px 12px;
-                border-left: none;
-                border-bottom: 3px solid transparent;
-                font-size: 0.8rem;
-            }
-            
-            .sidebar-menu li.active {
-                border-bottom-color: white;
-                border-left-color: transparent;
-            }
-            
-            main {
-                padding: 10px;
-            }
-            
-            .grid-cards,
-            .grid-cards-3 {
-                gap: 6px;
-            }
-            
-            .dash-card h1 {
-                font-size: 1.2rem;
-            }
-            
-            .search-box {
-                flex-direction: column;
-            }
-            
-            .search-box input,
-            .search-box select,
-            .search-box button {
-                width: 100%;
-            }
-            
-            .btn-group {
-                flex-direction: column;
-            }
-            
-            .btn-group button {
-                width: 100%;
-            }
-            
-            .scroll-controls {
-                bottom: 10px;
-                right: 10px;
-            }
-            
-            .scroll-btn {
-                width: 40px;
-                height: 40px;
-                font-size: 16px;
-            }
+            #app-container { flex-direction: column; }
+            nav.sidebar { width: 100%; height: auto; overflow-x: auto; overflow-y: hidden; }
+            .sidebar-header { display: none; }
+            .sidebar-menu { flex-direction: row; padding: 5px; white-space: nowrap; }
+            .sidebar-menu li { display: inline-flex; padding: 10px 12px; border-left: none; border-bottom: 3px solid transparent; }
+            .sidebar-menu li.active { border-bottom-color: white; border-left-color: transparent; }
+            main { padding: 10px; }
+            .grid-cards, .grid-cards-3 { gap: 6px; }
+            .dash-card h1 { font-size: 1.2rem; }
+            .search-box { flex-direction: column; }
+            .search-box input, .search-box select, .search-box button { width: 100%; }
+            .scroll-controls { bottom: 10px; right: 10px; }
+            .scroll-btn { width: 40px; height: 40px; font-size: 16px; }
         }
     </style>
 </head>
@@ -490,12 +476,10 @@
         </nav>
 
         <main id="main-content">
-            <!-- Barra de progresso -->
             <div class="scroll-progress">
                 <div id="scroll-progress-bar" class="scroll-progress-bar"></div>
             </div>
 
-            <!-- Quick Actions -->
             <div class="quick-actions">
                 <button class="quick-action-btn" onclick="showTab('ponto')"><i class="fas fa-clock"></i> Ponto</button>
                 <button class="quick-action-btn" onclick="showTab('tarefas')"><i class="fas fa-plus"></i> Tarefa</button>
@@ -503,25 +487,29 @@
                 <button class="quick-action-btn" onclick="showTab('equipe')"><i class="fas fa-user-plus"></i> Funcionário</button>
             </div>
 
-            <!-- Controles de scroll -->
             <div class="scroll-controls">
-                <div id="scroll-position" class="scroll-position">0%</div>
-                <button id="scroll-up-btn" class="scroll-btn up" onclick="scrollPage('up')" title="Rolar para cima">
-                    <i class="fas fa-arrow-up"></i>
-                </button>
-                <button id="scroll-down-btn" class="scroll-btn down" onclick="scrollPage('down')" title="Rolar para baixo">
-                    <i class="fas fa-arrow-down"></i>
-                </button>
-                <button id="scroll-top-btn" class="scroll-btn up" onclick="scrollToTop()" title="Voltar ao topo">
-                    <i class="fas fa-angle-double-up"></i>
-                </button>
+                <button id="scroll-up-btn" class="scroll-btn up" onclick="scrollPage('up')" title="Rolar para cima"><i class="fas fa-arrow-up"></i></button>
+                <button id="scroll-down-btn" class="scroll-btn down" onclick="scrollPage('down')" title="Rolar para baixo"><i class="fas fa-arrow-down"></i></button>
+                <button id="scroll-top-btn" class="scroll-btn up" onclick="scrollToTop()" title="Voltar ao topo"><i class="fas fa-angle-double-up"></i></button>
+            </div>
+
+            <div id="share-modal" class="modal">
+                <div class="modal-content">
+                    <h3><i class="fas fa-share-alt"></i> Compartilhar Backup</h3>
+                    <p>Escolha como deseja compartilhar:</p>
+                    <div class="share-options">
+                        <button class="share-option whatsapp" onclick="shareBackup('whatsapp')"><i class="fab fa-whatsapp"></i><br>WhatsApp</button>
+                        <button class="share-option email" onclick="shareBackup('email')"><i class="fas fa-envelope"></i><br>E-mail</button>
+                        <button class="share-option copy" onclick="shareBackup('copy')"><i class="fas fa-copy"></i><br>Copiar</button>
+                        <button class="share-option download" onclick="shareBackup('download')"><i class="fas fa-download"></i><br>Download</button>
+                    </div>
+                    <button class="close-modal" onclick="fecharModal()">Fechar</button>
+                </div>
             </div>
 
             <div id="storage-warning" style="display: none;" class="storage-info">
                 <i class="fas fa-exclamation-triangle"></i>
-                <div class="storage-bar">
-                    <div id="storage-fill" class="storage-fill" style="width: 0%"></div>
-                </div>
+                <div class="storage-bar"><div id="storage-fill" class="storage-fill" style="width: 0%"></div></div>
                 <span id="storage-text">0% utilizado</span>
                 <button onclick="limparHistoricoAntigo()" class="btn-warning" style="margin-left: auto; padding: 5px 10px;">Limpar</button>
             </div>
@@ -529,68 +517,27 @@
             <section id="dashboard" class="tab-content active">
                 <div id="cie-alertas-dashboard"></div>
                 <div id="alertas-limite"></div>
-                
                 <h3><i class="fas fa-users"></i> Equipe</h3>
                 <div class="grid-cards">
-                    <div class="card dash-card" style="border-top-color: var(--accent);">
-                        <small>Total</small>
-                        <h1 id="d-total">0</h1>
-                    </div>
-                    <div class="card dash-card" style="border-top-color: var(--success);">
-                        <small>Presentes</small>
-                        <h1 id="d-pres">0</h1>
-                    </div>
-                    <div class="card dash-card" style="border-top-color: var(--warning);">
-                        <small>Atrasos</small>
-                        <h1 id="d-atr">0</h1>
-                    </div>
-                    <div class="card dash-card" style="border-top-color: var(--danger);">
-                        <small>Ausentes</small>
-                        <h1 id="d-aus">0</h1>
-                    </div>
+                    <div class="card dash-card" style="border-top-color: var(--accent);"><small>Total</small><h1 id="d-total">0</h1></div>
+                    <div class="card dash-card" style="border-top-color: var(--success);"><small>Presentes</small><h1 id="d-pres">0</h1></div>
+                    <div class="card dash-card" style="border-top-color: var(--warning);"><small>Atrasos</small><h1 id="d-atr">0</h1></div>
+                    <div class="card dash-card" style="border-top-color: var(--danger);"><small>Ausentes</small><h1 id="d-aus">0</h1></div>
                 </div>
-                
-                <div class="card">
-                    <h3>Resumo de Ausências</h3>
-                    <div id="d-resumo-motivos" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;"></div>
-                </div>
-                
+                <div class="card"><h3>Resumo de Ausências</h3><div id="d-resumo-motivos" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;"></div></div>
                 <h3><i class="fas fa-tasks"></i> Tarefas</h3>
                 <div class="grid-cards-3">
-                    <div class="card dash-card" style="border-top-color: var(--info);">
-                        <small>Total</small>
-                        <h1 id="d-total-tarefas">0</h1>
-                    </div>
-                    <div class="card dash-card" style="border-top-color: var(--warning);">
-                        <small>Pendentes</small>
-                        <h1 id="d-tarefas-pendentes">0</h1>
-                    </div>
-                    <div class="card dash-card" style="border-top-color: var(--success);">
-                        <small>Concluídas</small>
-                        <h1 id="d-tarefas-concluidas">0</h1>
-                    </div>
+                    <div class="card dash-card" style="border-top-color: var(--info);"><small>Total</small><h1 id="d-total-tarefas">0</h1></div>
+                    <div class="card dash-card" style="border-top-color: var(--warning);"><small>Pendentes</small><h1 id="d-tarefas-pendentes">0</h1></div>
+                    <div class="card dash-card" style="border-top-color: var(--success);"><small>Concluídas</small><h1 id="d-tarefas-concluidas">0</h1></div>
                 </div>
-                
                 <h3><i class="fas fa-exclamation-triangle"></i> CIEs</h3>
                 <div class="grid-cards-3">
-                    <div class="card dash-card" style="border-top-color: var(--cie);">
-                        <small>Total</small>
-                        <h1 id="d-total-cies">0</h1>
-                    </div>
-                    <div class="card dash-card" style="border-top-color: var(--warning);">
-                        <small>Hoje</small>
-                        <h1 id="d-cies-hoje">0</h1>
-                    </div>
-                    <div class="card dash-card" style="border-top-color: var(--danger);">
-                        <small>Abertas</small>
-                        <h1 id="d-cies-abertas">0</h1>
-                    </div>
+                    <div class="card dash-card" style="border-top-color: var(--cie);"><small>Total</small><h1 id="d-total-cies">0</h1></div>
+                    <div class="card dash-card" style="border-top-color: var(--warning);"><small>Hoje</small><h1 id="d-cies-hoje">0</h1></div>
+                    <div class="card dash-card" style="border-top-color: var(--danger);"><small>Abertas</small><h1 id="d-cies-abertas">0</h1></div>
                 </div>
-                
-                <div class="card">
-                    <h3>Alertas por Função</h3>
-                    <div id="d-alertas-funcao"></div>
-                </div>
+                <div class="card"><h3>Alertas por Função</h3><div id="d-alertas-funcao"></div></div>
             </section>
 
             <section id="ponto" class="tab-content">
@@ -599,14 +546,7 @@
                     <input type="text" id="p-busca" placeholder="Filtrar por nome..." onkeyup="renderPonto()" style="margin-bottom: 10px;">
                     <div class="table-responsive">
                         <table>
-                            <thead>
-                                <tr>
-                                    <th>Funcionário</th>
-                                    <th>Função</th>
-                                    <th>Status</th>
-                                    <th>Tempo</th>
-                                </tr>
-                            </thead>
+                            <thead><tr><th>Funcionário</th><th>Função</th><th>Status</th><th>Tempo</th></tr></thead>
                             <tbody id="p-lista"></tbody>
                         </table>
                     </div>
@@ -618,13 +558,9 @@
                     <h3>Nova Tarefa</h3>
                     <form id="f-tarefa" class="form-group" onsubmit="salvarTarefa(event)">
                         <input type="text" id="t-desc" placeholder="Descrição" required>
-                        <select id="t-resp" required>
-                            <option value="">Responsável</option>
-                        </select>
+                        <select id="t-resp" required><option value="">Responsável</option></select>
                         <select id="t-prioridade" required>
-                            <option value="Baixa">Baixa</option>
-                            <option value="Média" selected>Média</option>
-                            <option value="Alta">Alta</option>
+                            <option value="Baixa">Baixa</option><option value="Média" selected>Média</option><option value="Alta">Alta</option>
                         </select>
                         <button type="submit" class="btn-add">Adicionar</button>
                     </form>
@@ -652,14 +588,7 @@
                 </div>
                 <div class="table-responsive">
                     <table>
-                        <thead>
-                            <tr>
-                                <th>Matrícula</th>
-                                <th>Nome</th>
-                                <th>Função</th>
-                                <th>Ação</th>
-                            </tr>
-                        </thead>
+                        <thead><tr><th>Matrícula</th><th>Nome</th><th>Função</th><th>Ação</th></tr></thead>
                         <tbody id="e-lista"></tbody>
                     </table>
                 </div>
@@ -681,11 +610,8 @@
                             </select>
                             <input type="text" id="cie-numero" placeholder="Número CIE">
                         </div>
-                        
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                            <select id="cie-funcionario">
-                                <option value="">Funcionário</option>
-                            </select>
+                            <select id="cie-funcionario"><option value="">Funcionário</option></select>
                             <select id="cie-impacto" required>
                                 <option value="">Impacto</option>
                                 <option value="Baixo">Baixo</option>
@@ -694,13 +620,10 @@
                                 <option value="Crítico">Crítico</option>
                             </select>
                         </div>
-                        
                         <textarea id="cie-descricao" placeholder="Descrição..." required></textarea>
-                        
                         <button type="submit" class="btn-cie">Registrar</button>
                     </form>
                 </div>
-                
                 <div class="card">
                     <h3>Filtrar CIEs</h3>
                     <div class="search-box">
@@ -713,7 +636,6 @@
                         </select>
                     </div>
                 </div>
-                
                 <div id="cie-lista"></div>
             </section>
 
@@ -737,12 +659,13 @@
                     <button onclick="salvarLimites()" class="btn-add">Salvar</button>
                 </div>
                 <div class="card">
-                    <h4>Backup</h4>
+                    <h4>Backup e Compartilhamento</h4>
                     <div class="btn-group">
-                        <button onclick="forcarDownloadBackup()" style="background:var(--primary); color:white;">Exportar</button>
-                        <button onclick="document.getElementById('in-file').click()" style="background:var(--secondary); color:white;">Importar</button>
+                        <button onclick="abrirModalBackup()" class="btn-info"><i class="fas fa-share-alt"></i> Compartilhar Backup</button>
+                        <button onclick="document.getElementById('in-file').click()" style="background:var(--secondary); color:white;"><i class="fas fa-upload"></i> Importar</button>
                     </div>
                     <input type="file" id="in-file" style="display: none;" accept=".json" onchange="importarBackup(this)">
+                    <p style="font-size:0.8rem; margin-top:10px;">Os dados são salvos automaticamente</p>
                 </div>
                 <div class="card">
                     <h4>Gerenciar Espaço</h4>
@@ -767,86 +690,31 @@
         const scrollUpBtn = document.getElementById('scroll-up-btn');
         const scrollDownBtn = document.getElementById('scroll-down-btn');
         const scrollTopBtn = document.getElementById('scroll-top-btn');
-        const scrollPosition = document.getElementById('scroll-position');
         const progressBar = document.getElementById('scroll-progress-bar');
 
         // CONTROLE DE SCROLL
-        let scrollTimeout;
-
         function updateScrollControls() {
             if (!mainContent) return;
-            
             const scrollTop = mainContent.scrollTop;
             const scrollHeight = mainContent.scrollHeight;
             const clientHeight = mainContent.clientHeight;
             const maxScroll = scrollHeight - clientHeight;
-            
-            // Posição percentual
             const percent = maxScroll > 0 ? (scrollTop / maxScroll) * 100 : 0;
-            if (progressBar) {
-                progressBar.style.width = percent + '%';
-            }
+            if (progressBar) progressBar.style.width = percent + '%';
             
-            // Mostrar/esconder botões
-            if (scrollTop > 50) {
-                scrollUpBtn.classList.add('show');
-                scrollTopBtn.classList.add('show');
-            } else {
-                scrollUpBtn.classList.remove('show');
-                scrollTopBtn.classList.remove('show');
-            }
-            
-            if (scrollTop < maxScroll - 50) {
-                scrollDownBtn.classList.add('show');
-            } else {
-                scrollDownBtn.classList.remove('show');
-            }
-            
-            // Mostrar posição
-            if (scrollPosition) {
-                scrollPosition.textContent = Math.round(percent) + '%';
-                scrollPosition.classList.add('show');
-                
-                clearTimeout(scrollTimeout);
-                scrollTimeout = setTimeout(() => {
-                    scrollPosition.classList.remove('show');
-                }, 1500);
-            }
+            scrollUpBtn.classList.toggle('show', scrollTop > 50);
+            scrollTopBtn.classList.toggle('show', scrollTop > 50);
+            scrollDownBtn.classList.toggle('show', scrollTop < maxScroll - 50);
         }
 
-        function scrollToTop() {
-            if (mainContent) {
-                mainContent.scrollTo({
-                    top: 0,
-                    behavior: 'smooth'
-                });
-            }
-        }
-
+        function scrollToTop() { if (mainContent) mainContent.scrollTo({ top: 0, behavior: 'smooth' }); }
         function scrollPage(direction) {
             if (!mainContent) return;
-            
-            const scrollAmount = window.innerHeight * 0.3;
-            
-            if (direction === 'up') {
-                mainContent.scrollBy({
-                    top: -scrollAmount,
-                    behavior: 'smooth'
-                });
-            } else {
-                mainContent.scrollBy({
-                    top: scrollAmount,
-                    behavior: 'smooth'
-                });
-            }
+            mainContent.scrollBy({ top: direction === 'up' ? -window.innerHeight * 0.3 : window.innerHeight * 0.3, behavior: 'smooth' });
         }
+        if (mainContent) mainContent.addEventListener('scroll', updateScrollControls);
 
-        // Event listeners de scroll
-        if (mainContent) {
-            mainContent.addEventListener('scroll', updateScrollControls);
-        }
-
-        // FUNÇÕES DE STORAGE
+        // FUNÇÕES DE STORAGE CORRIGIDAS
         function get(key) {
             try {
                 const value = localStorage.getItem(key);
@@ -881,93 +749,102 @@
             }
         }
 
+        // FUNÇÕES DE BACKUP E COMPARTILHAMENTO
+        function abrirModalBackup() { document.getElementById('share-modal').classList.add('active'); }
+        function fecharModal() { document.getElementById('share-modal').classList.remove('active'); }
+
+        function gerarBackupJSON() {
+            return {
+                db_equipe: get('db_equipe'),
+                db_tarefas: get('db_tarefas'),
+                db_ponto: get('db_ponto'),
+                db_limites: get('db_limites'),
+                db_historico: get('db_historico'),
+                db_cies: get('db_cies'),
+                ultima_data: localStorage.getItem('ultima_data'),
+                data_backup: new Date().toISOString(),
+                versao: '1.0'
+            };
+        }
+
+        function shareBackup(tipo) {
+            const backup = gerarBackupJSON();
+            const jsonString = JSON.stringify(backup, null, 2);
+            const agora = new Date();
+            const dataHora = `${agora.getFullYear()}-${String(agora.getMonth()+1).padStart(2,'0')}-${String(agora.getDate()).padStart(2,'0')}_${String(agora.getHours()).padStart(2,'0')}-${String(agora.getMinutes()).padStart(2,'0')}`;
+            const nomeArquivo = `LOGISTICA_BACKUP_${dataHora}.json`;
+
+            switch(tipo) {
+                case 'whatsapp':
+                    const texto = `*Backup Logística Master*\nData: ${new Date().toLocaleString('pt-BR')}`;
+                    if (navigator.share) {
+                        const blob = new Blob([jsonString], { type: 'application/json' });
+                        const file = new File([blob], nomeArquivo, { type: 'application/json' });
+                        navigator.share({ title: 'Backup Logística Master', text: texto, files: [file] }).catch(() => {
+                            window.open(`https://wa.me/?text=${encodeURIComponent(texto + '\n' + jsonString)}`, '_blank');
+                        });
+                    } else {
+                        window.open(`https://wa.me/?text=${encodeURIComponent(texto + '\n\n' + jsonString)}`, '_blank');
+                    }
+                    break;
+                case 'email':
+                    window.location.href = `mailto:?subject=${encodeURIComponent('Backup Logística Master')}&body=${encodeURIComponent('Backup gerado em ' + new Date().toLocaleString('pt-BR') + '\n\n' + jsonString)}`;
+                    break;
+                case 'copy':
+                    navigator.clipboard.writeText(jsonString).then(() => alert('Backup copiado!'));
+                    break;
+                case 'download':
+                    const blob = new Blob([jsonString], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = nomeArquivo;
+                    link.click();
+                    setTimeout(() => URL.revokeObjectURL(url), 100);
+                    break;
+            }
+            fecharModal();
+        }
+
         // FUNÇÕES DE ESPAÇO
         function calcularTamanhoStorage() {
             let total = 0;
-            for (let key in localStorage) {
-                if (localStorage.hasOwnProperty(key)) {
-                    total += (localStorage[key].length * 2);
-                }
-            }
+            for (let key in localStorage) if (localStorage.hasOwnProperty(key)) total += (localStorage[key].length * 2);
             return total;
         }
 
         function verificarEspacoArmazenamento() {
             const usado = calcularTamanhoStorage();
             const percentual = (usado / MAX_STORAGE_SIZE) * 100;
-            
             const warning = document.getElementById('storage-warning');
             const fill = document.getElementById('storage-fill');
             const text = document.getElementById('storage-text');
-            
             if (percentual > 70 && warning) {
                 warning.style.display = 'flex';
                 fill.style.width = Math.min(percentual, 100) + '%';
                 text.textContent = `${(usado / 1024 / 1024).toFixed(2)}MB / 5MB (${percentual.toFixed(1)}%)`;
-                
-                if (percentual > 90) {
-                    fill.style.background = 'var(--danger)';
-                } else {
-                    fill.style.background = 'var(--warning)';
-                }
-            } else if (warning) {
-                warning.style.display = 'none';
-            }
-        }
-
-        function limparHistoricoAntigo() {
-            if (confirm('Remover registros com mais de 30 dias?')) {
-                const historico = get('db_historico') || [];
-                const dataLimite = new Date();
-                dataLimite.setDate(dataLimite.getDate() - 30);
-                
-                const historicoFiltrado = historico.filter(item => {
-                    if (!item.data) return false;
-                    const dataItem = new Date(item.data.split('-').join('/'));
-                    return dataItem >= dataLimite;
-                });
-                
-                if (set('db_historico', historicoFiltrado)) {
-                    alert('Histórico removido!');
-                    verificarEspacoArmazenamento();
-                }
-            }
-        }
-
-        function compactarDados() {
-            try {
-                const historico = get('db_historico') || [];
-                const historicoCompactado = historico.map(dia => ({
-                    d: dia.data,
-                    p: dia.pontos.map(p => ({
-                        n: p.nome,
-                        s: p.status,
-                        t: p.tempo || ''
-                    }))
-                }));
-                set('db_historico', historicoCompactado);
-                alert('Dados compactados!');
-            } catch (e) {
-                alert('Erro ao compactar.');
-            }
+                fill.style.background = percentual > 90 ? 'var(--danger)' : 'var(--warning)';
+            } else if (warning) warning.style.display = 'none';
         }
 
         // INICIALIZAÇÃO
         function inicializarEstrutura() {
+            if (!localStorage.getItem('db_equipe')) set('db_equipe', []);
+            if (!localStorage.getItem('db_tarefas')) set('db_tarefas', []);
             if (!localStorage.getItem('db_historico')) set('db_historico', []);
             if (!localStorage.getItem('db_cies')) set('db_cies', []);
+            if (!localStorage.getItem('db_ponto')) set('db_ponto', {});
             if (!localStorage.getItem('db_limites')) {
                 let limites = {};
                 CATS.forEach(cat => limites[cat] = 0);
                 set('db_limites', limites);
             }
-            if (!localStorage.getItem('db_ponto')) set('db_ponto', {});
             if (!localStorage.getItem('ultima_data')) {
                 localStorage.setItem('ultima_data', new Date().toISOString().split('T')[0]);
             }
         }
 
-        // NAVEGAÇÃO
+        // FUNÇÕES DE NAVEGAÇÃO
         function showTab(id) {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.sidebar-menu li').forEach(l => l.classList.remove('active'));
@@ -977,27 +854,17 @@
                 li.textContent.toLowerCase().includes(id.toLowerCase())
             );
             if(li) li.classList.add('active');
-
-            // Reset scroll
-            if (mainContent) {
-                mainContent.scrollTop = 0;
-            }
+            if (mainContent) mainContent.scrollTop = 0;
 
             switch(id) {
                 case 'dashboard': renderDashboard(); break;
                 case 'equipe': renderEquipe(); break;
                 case 'ponto': renderPonto(); break;
                 case 'tarefas': renderTarefas(); break;
-                case 'ocorrencias': 
-                    atualizarSelectFuncionarios();
-                    renderCIEs();
-                    break;
-                case 'historico':
-                    document.getElementById('h-data-busca').value = new Date().toISOString().split('T')[0];
-                    break;
+                case 'ocorrencias': atualizarSelectFuncionarios(); renderCIEs(); break;
+                case 'historico': document.getElementById('h-data-busca').value = new Date().toISOString().split('T')[0]; break;
                 case 'configuracoes': renderConfigs(); break;
             }
-            
             verificarEspacoArmazenamento();
         }
 
@@ -1010,17 +877,8 @@
                 mat: document.getElementById('e-mat').value.trim(),
                 fun: document.getElementById('e-fun').value
             };
-            
-            if (!novoFunc.nome || !novoFunc.mat || !novoFunc.fun) {
-                alert('Preencha todos os campos!');
-                return;
-            }
-            
-            if (list.some(f => f.mat === novoFunc.mat)) {
-                alert('Matrícula já existe!');
-                return;
-            }
-            
+            if (!novoFunc.nome || !novoFunc.mat || !novoFunc.fun) { alert('Preencha todos os campos!'); return; }
+            if (list.some(f => f.mat === novoFunc.mat)) { alert('Matrícula já existe!'); return; }
             list.push(novoFunc);
             if (set('db_equipe', list)) {
                 e.target.reset();
@@ -1032,12 +890,9 @@
         function renderEquipe() {
             const equipe = get('db_equipe') || [];
             document.getElementById('e-lista').innerHTML = equipe.map((f, i) => 
-                `<tr>
-                    <td>${f.mat || ''}</td>
-                    <td>${f.nome || ''}</td>
-                    <td><span class="badge" style="background:var(--accent); color:white;">${f.fun || ''}</span></td>
-                    <td><button onclick="removerEquipe(${i})" class="btn-danger">X</button></td>
-                </tr>`
+                `<tr><td>${f.mat || ''}</td><td>${f.nome || ''}</td>
+                <td><span class="badge" style="background:var(--accent); color:white;">${f.fun || ''}</span></td>
+                <td><button onclick="removerEquipe(${i})" class="btn-danger">X</button></td></tr>`
             ).join('');
         }
 
@@ -1056,39 +911,28 @@
             const equipe = get('db_equipe') || [];
             const ponto = get('db_ponto') || {};
             const busca = document.getElementById('p-busca').value.toLowerCase();
-            
-            const equipeFiltrada = equipe.filter(f => 
-                f && (f.nome?.toLowerCase().includes(busca) || f.fun?.toLowerCase().includes(busca))
-            );
+            const equipeFiltrada = equipe.filter(f => f && (f.nome?.toLowerCase().includes(busca) || f.fun?.toLowerCase().includes(busca)));
             
             document.getElementById('p-lista').innerHTML = equipeFiltrada.map(f => {
                 const registro = ponto[f.mat] || { status: "Presente", tempo: "" };
-                
                 return `<tr>
                     <td><strong>${f.nome || ''}</strong><br><small>${f.mat}</small></td>
                     <td>${f.fun || ''}</td>
-                    <td>
-                        <select onchange="attPonto('${f.mat}', this.value)" style="width:100%;">
-                            <option value="Presente" ${registro.status === 'Presente' ? 'selected' : ''}>Presente</option>
-                            <option value="Atraso" ${registro.status === 'Atraso' ? 'selected' : ''}>Atraso</option>
-                            ${MOTIVOS.map(m => `<option value="${m}" ${registro.status === m ? 'selected' : ''}>${m}</option>`).join('')}
-                        </select>
-                    </td>
-                    <td>
-                        <input type="text" placeholder="Minutos" value="${registro.tempo || ''}" 
-                               onchange="attTempo('${f.mat}', this.value)" 
-                               style="width:100%; ${registro.status !== 'Atraso' ? 'display:none;' : ''}">
-                    </td>
+                    <td><select onchange="attPonto('${f.mat}', this.value)" style="width:100%;">
+                        <option value="Presente" ${registro.status === 'Presente' ? 'selected' : ''}>Presente</option>
+                        <option value="Atraso" ${registro.status === 'Atraso' ? 'selected' : ''}>Atraso</option>
+                        ${MOTIVOS.map(m => `<option value="${m}" ${registro.status === m ? 'selected' : ''}>${m}</option>`).join('')}
+                    </select></td>
+                    <td><input type="text" placeholder="Minutos" value="${registro.tempo || ''}" 
+                        onchange="attTempo('${f.mat}', this.value)" 
+                        style="width:100%; ${registro.status !== 'Atraso' ? 'display:none;' : ''}"></td>
                 </tr>`;
             }).join('');
         }
 
         function attPonto(matricula, status) {
             const ponto = get('db_ponto') || {};
-            ponto[matricula] = {
-                status: status,
-                tempo: ponto[matricula]?.tempo || ""
-            };
+            ponto[matricula] = { status: status, tempo: ponto[matricula]?.tempo || "" };
             set('db_ponto', ponto);
             renderPonto();
             renderDashboard();
@@ -1096,10 +940,7 @@
 
         function attTempo(matricula, tempo) {
             const ponto = get('db_ponto') || {};
-            if (ponto[matricula]) {
-                ponto[matricula].tempo = tempo;
-                set('db_ponto', ponto);
-            }
+            if (ponto[matricula]) { ponto[matricula].tempo = tempo; set('db_ponto', ponto); }
         }
 
         // TAREFAS
@@ -1122,7 +963,6 @@
         function renderTarefas() {
             const equipe = get('db_equipe') || [];
             const tarefas = get('db_tarefas') || [];
-            
             const selectResp = document.getElementById('t-resp');
             if (selectResp) {
                 selectResp.innerHTML = '<option value="">Responsável</option>' + 
@@ -1130,25 +970,18 @@
             }
             
             document.getElementById('t-lista').innerHTML = tarefas.map((t, i) => {
-                const cor = t.prioridade === 'Alta' ? 'var(--danger)' : 
-                           t.prioridade === 'Média' ? 'var(--warning)' : 'var(--success)';
-                
-                return `
-                    <div class="card" style="border-left:5px solid ${cor}">
-                        <div style="display:flex; justify-content:space-between">
-                            <div>
-                                <strong>${t.desc}</strong><br>
-                                <small>Resp: ${t.resp}</small>
-                            </div>
-                            <button onclick="removerTarefa(${i})" class="btn-danger">X</button>
-                        </div>
-                        <select onchange="attStatusTarefa(${i}, this.value)" style="margin-top:10px; width:100%">
-                            <option value="Pendente" ${t.status === 'Pendente' ? 'selected' : ''}>Pendente</option>
-                            <option value="Em andamento" ${t.status === 'Em andamento' ? 'selected' : ''}>Andamento</option>
-                            <option value="Concluída" ${t.status === 'Concluída' ? 'selected' : ''}>Concluída</option>
-                        </select>
+                const cor = t.prioridade === 'Alta' ? 'var(--danger)' : t.prioridade === 'Média' ? 'var(--warning)' : 'var(--success)';
+                return `<div class="card" style="border-left:5px solid ${cor}">
+                    <div style="display:flex; justify-content:space-between">
+                        <div><strong>${t.desc}</strong><br><small>Resp: ${t.resp}</small></div>
+                        <button onclick="removerTarefa(${i})" class="btn-danger">X</button>
                     </div>
-                `;
+                    <select onchange="attStatusTarefa(${i}, this.value)" style="margin-top:10px; width:100%">
+                        <option value="Pendente" ${t.status === 'Pendente' ? 'selected' : ''}>Pendente</option>
+                        <option value="Em andamento" ${t.status === 'Em andamento' ? 'selected' : ''}>Andamento</option>
+                        <option value="Concluída" ${t.status === 'Concluída' ? 'selected' : ''}>Concluída</option>
+                    </select>
+                </div>`;
             }).join('');
         }
 
@@ -1172,7 +1005,6 @@
         function atualizarSelectFuncionarios() {
             const select = document.getElementById('cie-funcionario');
             if (!select) return;
-            
             const equipe = get('db_equipe') || [];
             select.innerHTML = '<option value="">Funcionário</option>' + 
                 equipe.map(f => `<option value="${f.nome}">${f.nome}</option>`).join('');
@@ -1180,10 +1012,8 @@
 
         function salvarCIE(e) {
             e.preventDefault();
-            
             const cies = get('db_cies') || [];
             const hoje = new Date().toISOString().split('T')[0];
-            
             const novaCIE = {
                 id: Date.now(),
                 numero: document.getElementById('cie-numero').value || `CIE-${Date.now()}`,
@@ -1195,7 +1025,6 @@
                 hora: new Date().toLocaleTimeString('pt-BR'),
                 status: 'Aberta'
             };
-            
             cies.push(novaCIE);
             set('db_cies', cies);
             document.getElementById('f-cie').reset();
@@ -1208,22 +1037,11 @@
             const cies = get('db_cies') || [];
             const busca = document.getElementById('cie-busca')?.value.toLowerCase() || '';
             const filtroTipo = document.getElementById('cie-filtro-tipo')?.value || '';
-            
             let ciesFiltradas = cies.sort((a, b) => new Date(b.data) - new Date(a.data));
-            
-            if (busca) {
-                ciesFiltradas = ciesFiltradas.filter(c => 
-                    c.numero?.toLowerCase().includes(busca) ||
-                    c.descricao?.toLowerCase().includes(busca)
-                );
-            }
-            
-            if (filtroTipo) {
-                ciesFiltradas = ciesFiltradas.filter(c => c.tipo === filtroTipo);
-            }
+            if (busca) ciesFiltradas = ciesFiltradas.filter(c => c.numero?.toLowerCase().includes(busca) || c.descricao?.toLowerCase().includes(busca));
+            if (filtroTipo) ciesFiltradas = ciesFiltradas.filter(c => c.tipo === filtroTipo);
             
             const container = document.getElementById('cie-lista');
-            
             if (ciesFiltradas.length === 0) {
                 container.innerHTML = '<div class="card">Nenhuma CIE encontrada.</div>';
                 return;
@@ -1279,76 +1097,42 @@
             const tarefas = get('db_tarefas') || [];
             const cies = get('db_cies') || [];
             
-            // Status equipe
-            let status = {
-                Presente: 0, Atraso: 0, Falta: 0, Atestado: 0, 
-                Licença: 0, Férias: 0, "Serviço externo": 0
-            };
-            
-            equipe.forEach(f => {
-                if (f && f.mat) {
-                    const s = ponto[f.mat]?.status || "Presente";
-                    status[s] = (status[s] || 0) + 1;
-                }
-            });
+            let status = { Presente: 0, Atraso: 0, Falta: 0, Atestado: 0, Licença: 0, Férias: 0, "Serviço externo": 0 };
+            equipe.forEach(f => { if (f && f.mat) { const s = ponto[f.mat]?.status || "Presente"; status[s] = (status[s] || 0) + 1; } });
             
             const totalAusentes = MOTIVOS.reduce((acc, m) => acc + (status[m] || 0), 0);
-            
             document.getElementById('d-total').innerText = equipe.length;
             document.getElementById('d-pres').innerText = equipe.length - totalAusentes - (status.Atraso || 0);
             document.getElementById('d-atr').innerText = status.Atraso || 0;
             document.getElementById('d-aus').innerText = totalAusentes;
+            document.getElementById('d-resumo-motivos').innerHTML = MOTIVOS.map(m => `<div><strong>${m}:</strong> ${status[m] || 0}</div>`).join('');
             
-            document.getElementById('d-resumo-motivos').innerHTML = MOTIVOS.map(m => 
-                `<div><strong>${m}:</strong> ${status[m] || 0}</div>`
-            ).join('');
-            
-            // Tarefas
             const pendentes = tarefas.filter(t => t.status === 'Pendente' || t.status === 'Em andamento').length;
             const concluidas = tarefas.filter(t => t.status === 'Concluída').length;
-            
             document.getElementById('d-total-tarefas').innerText = tarefas.length;
             document.getElementById('d-tarefas-pendentes').innerText = pendentes;
             document.getElementById('d-tarefas-concluidas').innerText = concluidas;
             
-            // CIEs
             const hoje = new Date().toISOString().split('T')[0];
             const ciesHoje = cies.filter(c => c.data === hoje).length;
             const ciesAbertas = cies.filter(c => c.status === 'Aberta').length;
-            
             document.getElementById('d-total-cies').innerText = cies.length;
             document.getElementById('d-cies-hoje').innerText = ciesHoje;
             document.getElementById('d-cies-abertas').innerText = ciesAbertas;
             
-            // Alertas
-            const alertas = document.getElementById('d-alertas-funcao');
             let alertasHTML = '';
-            
             CATS.forEach(cat => {
-                const ausentes = equipe.filter(f => 
-                    f && f.fun === cat && MOTIVOS.includes(ponto[f.mat]?.status)
-                ).length;
-                
+                const ausentes = equipe.filter(f => f && f.fun === cat && MOTIVOS.includes(ponto[f.mat]?.status)).length;
                 if (limites[cat] > 0 && ausentes >= limites[cat]) {
-                    alertasHTML += `<div style="background:var(--warning); padding:10px; margin:5px 0; color:white; border-radius:4px;">
-                        ${cat}: ${ausentes} ausentes (limite ${limites[cat]})
-                    </div>`;
+                    alertasHTML += `<div style="background:var(--warning); padding:10px; margin:5px 0; color:white; border-radius:4px;">${cat}: ${ausentes} ausentes (limite ${limites[cat]})</div>`;
                 }
             });
+            document.getElementById('d-alertas-funcao').innerHTML = alertasHTML || 'Nenhum alerta';
             
-            alertas.innerHTML = alertasHTML || 'Nenhum alerta';
-            
-            // Alertas CIE críticas
             const ciesCriticas = cies.filter(c => c.impacto === 'Crítico' && c.status === 'Aberta');
             const cieAlertas = document.getElementById('cie-alertas-dashboard');
-            
             if (ciesCriticas.length > 0) {
-                cieAlertas.innerHTML = ciesCriticas.map(c => `
-                    <div class="cie-alert">
-                        <strong>CIE Crítica: ${c.numero}</strong> - ${c.descricao.substring(0,50)}
-                        <button onclick="showTab('ocorrencias')" class="btn-warning" style="padding:5px 10px;">Ver</button>
-                    </div>
-                `).join('');
+                cieAlertas.innerHTML = ciesCriticas.map(c => `<div class="cie-alert"><strong>CIE Crítica: ${c.numero}</strong> - ${c.descricao.substring(0,50)}<button onclick="showTab('ocorrencias')" class="btn-warning" style="padding:5px 10px;">Ver</button></div>`).join('');
             } else {
                 cieAlertas.innerHTML = '';
             }
@@ -1356,8 +1140,7 @@
 
         // HISTÓRICO
         function carregarHistoricoHoje() {
-            const hoje = new Date().toISOString().split('T')[0];
-            document.getElementById('h-data-busca').value = hoje;
+            document.getElementById('h-data-busca').value = new Date().toISOString().split('T')[0];
             document.getElementById('h-func-busca').value = '';
             buscarHistorico();
         }
@@ -1365,19 +1148,10 @@
         function buscarHistorico() {
             const dataBusca = document.getElementById('h-data-busca').value;
             const funcBusca = document.getElementById('h-func-busca').value.toLowerCase();
-            
             let historico = get('db_historico') || [];
             
-            // Descompactar
             if (historico.length > 0 && historico[0].d) {
-                historico = historico.map(dia => ({
-                    data: dia.d,
-                    pontos: dia.p.map(p => ({
-                        nome: p.n,
-                        status: p.s,
-                        tempo: p.t || ''
-                    }))
-                }));
+                historico = historico.map(dia => ({ data: dia.d, pontos: dia.p.map(p => ({ nome: p.n, status: p.s, tempo: p.t || '' })) }));
             }
             
             let resultados = [];
@@ -1387,113 +1161,83 @@
             } else {
                 resultados = historico.flatMap(h => (h.pontos || []).map(p => ({...p, data: h.data})));
             }
-            
-            if (funcBusca) {
-                resultados = resultados.filter(r => r.nome?.toLowerCase().includes(funcBusca));
-            }
+            if (funcBusca) resultados = resultados.filter(r => r.nome?.toLowerCase().includes(funcBusca));
             
             const container = document.getElementById('h-resultado');
-            
             if (resultados.length === 0) {
                 container.innerHTML = '<div class="card">Nenhum registro encontrado.</div>';
                 return;
             }
             
             const agrupado = {};
-            resultados.forEach(r => {
-                if (!agrupado[r.data]) agrupado[r.data] = [];
-                agrupado[r.data].push(r);
-            });
+            resultados.forEach(r => { if (!agrupado[r.data]) agrupado[r.data] = []; agrupado[r.data].push(r); });
             
             let html = '';
             for (let data in agrupado) {
-                html += `
-                    <div class="card">
-                        <h4>${new Date(data).toLocaleDateString('pt-BR')}</h4>
-                        <div class="table-responsive">
-                            <table>
-                                <thead><tr><th>Nome</th><th>Status</th><th>Tempo</th></tr></thead>
-                                <tbody>
-                                    ${agrupado[data].map(p => `
-                                        <tr>
-                                            <td>${p.nome}</td>
-                                            <td><span class="badge ${p.status === 'Presente' ? 'badge-success' : p.status === 'Atraso' ? 'badge-warning' : 'badge-danger'}">${p.status}</span></td>
-                                            <td>${p.tempo || '-'}</td>
-                                        </tr>
-                                    `).join('')}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                `;
+                html += `<div class="card"><h4>${new Date(data).toLocaleDateString('pt-BR')}</h4>
+                    <div class="table-responsive"><table><thead><tr><th>Nome</th><th>Status</th><th>Tempo</th></tr></thead><tbody>
+                    ${agrupado[data].map(p => `<tr><td>${p.nome}</td>
+                        <td><span class="badge ${p.status === 'Presente' ? 'badge-success' : p.status === 'Atraso' ? 'badge-warning' : 'badge-danger'}">${p.status}</span></td>
+                        <td>${p.tempo || '-'}</td></tr>`).join('')}
+                    </tbody></table></div></div>`;
             }
-            
             container.innerHTML = html;
         }
 
         // CONFIGURAÇÕES
         function renderConfigs() {
             const limites = get('db_limites') || {};
-            document.getElementById('c-lista-limites').innerHTML = CATS.map(f => `
-                <div style="display:flex; justify-content:space-between; align-items:center; padding:5px 0;">
+            document.getElementById('c-lista-limites').innerHTML = CATS.map(f => 
+                `<div style="display:flex; justify-content:space-between; align-items:center; padding:5px 0;">
                     <label>${f}</label>
                     <input type="number" id="lim-${f}" value="${limites[f] || 0}" style="width:70px; text-align:center;">
-                </div>
-            `).join('');
+                </div>`
+            ).join('');
         }
 
         function salvarLimites() {
             let limites = {};
-            CATS.forEach(f => {
-                const input = document.getElementById(`lim-${f}`);
-                limites[f] = parseInt(input.value) || 0;
-            });
+            CATS.forEach(f => { const input = document.getElementById(`lim-${f}`); limites[f] = parseInt(input.value) || 0; });
             set('db_limites', limites);
             alert('Limites salvos!');
             renderDashboard();
         }
 
-        // BACKUP
-        function forcarDownloadBackup() {
-            try {
-                const backup = {
-                    db_equipe: get('db_equipe'),
-                    db_tarefas: get('db_tarefas'),
-                    db_ponto: get('db_ponto'),
-                    db_limites: get('db_limites'),
-                    db_historico: get('db_historico'),
-                    db_cies: get('db_cies'),
-                    ultima_data: localStorage.getItem('ultima_data'),
-                    data_backup: new Date().toISOString()
-                };
-                
-                const agora = new Date();
-                const dataHora = `${agora.getFullYear()}-${String(agora.getMonth()+1).padStart(2,'0')}-${String(agora.getDate()).padStart(2,'0')}_${String(agora.getHours()).padStart(2,'0')}-${String(agora.getMinutes()).padStart(2,'0')}-${String(agora.getSeconds()).padStart(2,'0')}`;
-                
-                const json = JSON.stringify(backup, null, 2);
-                const blob = new Blob([json], { type: 'application/json' });
-                const url = URL.createObjectURL(blob);
-                const link = document.createElement('a');
-                
-                link.href = url;
-                link.download = `LOGISTICA_BACKUP_${dataHora}.json`;
-                link.click();
-                
-                setTimeout(() => URL.revokeObjectURL(url), 100);
-                alert('Backup exportado!');
-            } catch (e) {
-                alert('Erro no backup.');
+        function limparHistoricoAntigo() {
+            if (confirm('Remover registros com mais de 30 dias?')) {
+                const historico = get('db_historico') || [];
+                const dataLimite = new Date();
+                dataLimite.setDate(dataLimite.getDate() - 30);
+                const historicoFiltrado = historico.filter(item => {
+                    if (!item.data) return false;
+                    const dataItem = new Date(item.data.split('-').join('/'));
+                    return dataItem >= dataLimite;
+                });
+                if (set('db_historico', historicoFiltrado)) {
+                    alert('Histórico removido!');
+                    verificarEspacoArmazenamento();
+                }
             }
+        }
+
+        function compactarDados() {
+            try {
+                const historico = get('db_historico') || [];
+                const historicoCompactado = historico.map(dia => ({
+                    d: dia.data,
+                    p: dia.pontos.map(p => ({ n: p.nome, s: p.status, t: p.tempo || '' }))
+                }));
+                set('db_historico', historicoCompactado);
+                alert('Dados compactados!');
+            } catch (e) { alert('Erro ao compactar.'); }
         }
 
         function importarBackup(input) {
             if (!input.files?.[0]) return;
-            
             const reader = new FileReader();
             reader.onload = (e) => {
                 try {
                     const dados = JSON.parse(e.target.result);
-                    
                     if (dados.db_equipe) set('db_equipe', dados.db_equipe);
                     if (dados.db_tarefas) set('db_tarefas', dados.db_tarefas);
                     if (dados.db_ponto) set('db_ponto', dados.db_ponto);
@@ -1501,12 +1245,9 @@
                     if (dados.db_historico) set('db_historico', dados.db_historico);
                     if (dados.db_cies) set('db_cies', dados.db_cies);
                     if (dados.ultima_data) localStorage.setItem('ultima_data', dados.ultima_data);
-                    
                     alert('Backup restaurado!');
                     location.reload();
-                } catch (erro) {
-                    alert('Arquivo inválido.');
-                }
+                } catch (erro) { alert('Arquivo inválido.'); }
             };
             reader.readAsText(input.files[0]);
         }
@@ -1521,39 +1262,24 @@
 
         function atualizarDataAtual() {
             const elem = document.getElementById('data-atual');
-            if (elem) {
-                elem.textContent = new Date().toLocaleDateString('pt-BR');
-            }
+            if (elem) elem.textContent = new Date().toLocaleDateString('pt-BR');
         }
 
         function verificarViradaDeDia() {
             const hoje = new Date().toISOString().split('T')[0];
             const ultima = localStorage.getItem('ultima_data');
-            
             if (ultima && ultima !== hoje) {
                 const equipe = get('db_equipe') || [];
                 const ponto = get('db_ponto') || {};
-                
                 if (equipe.length > 0) {
                     const historico = get('db_historico') || [];
-                    historico.push({
-                        data: ultima,
-                        pontos: equipe.map(f => ({
-                            nome: f.nome,
-                            status: ponto[f.mat]?.status || "Presente",
-                            tempo: ponto[f.mat]?.tempo || ""
-                        }))
-                    });
+                    historico.push({ data: ultima, pontos: equipe.map(f => ({ nome: f.nome, status: ponto[f.mat]?.status || "Presente", tempo: ponto[f.mat]?.tempo || "" })) });
                     set('db_historico', historico);
                 }
-                
                 set('db_ponto', {});
                 localStorage.setItem('ultima_data', hoje);
-                
                 const tarefas = get('db_tarefas') || [];
-                if (tarefas.length > 0) {
-                    set('db_tarefas', tarefas.map(t => ({...t, status: 'Pendente'})));
-                }
+                if (tarefas.length > 0) set('db_tarefas', tarefas.map(t => ({...t, status: 'Pendente'})));
             }
         }
 
@@ -1566,11 +1292,7 @@
             showTab('dashboard');
         });
 
-        // Verificação periódica
-        setInterval(() => {
-            verificarViradaDeDia();
-            verificarEspacoArmazenamento();
-        }, 60000);
+        setInterval(() => { verificarViradaDeDia(); verificarEspacoArmazenamento(); }, 60000);
     </script>
 </body>
 </html>
