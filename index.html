@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>Logística Master - V15.1 Mobile Completo</title>
+    <title>Logística Master - V17 Mobile Completo</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
@@ -41,6 +41,7 @@
             height: 100%;
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
+            width: 230px;
         }
         
         .sidebar-header { 
@@ -62,7 +63,7 @@
         }
         
         .sidebar-menu li { 
-            padding: 15px 15px; 
+            padding: 15px; 
             cursor: pointer; 
             font-size: 0.95rem; 
             transition: 0.3s;
@@ -95,10 +96,36 @@
             position: relative;
         }
         
-        #scroll-top-btn {
+        /* Barra de progresso */
+        .scroll-progress {
+            position: sticky;
+            top: 0;
+            width: 100%;
+            height: 3px;
+            background: rgba(0,0,0,0.1);
+            z-index: 999;
+            margin-bottom: 10px;
+        }
+        
+        .scroll-progress-bar {
+            height: 100%;
+            background: var(--accent);
+            width: 0%;
+            transition: width 0.1s;
+        }
+        
+        /* Controles de scroll */
+        .scroll-controls {
             position: fixed;
             bottom: 20px;
             right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 1000;
+        }
+        
+        .scroll-btn {
             width: 50px;
             height: 50px;
             border-radius: 50%;
@@ -111,16 +138,64 @@
             align-items: center;
             justify-content: center;
             font-size: 20px;
-            z-index: 1000;
             transition: all 0.3s;
         }
         
-        #scroll-top-btn.show {
+        .scroll-btn.show {
             display: flex;
         }
         
-        #scroll-top-btn:active {
+        .scroll-btn:active {
             transform: scale(0.9);
+        }
+        
+        .scroll-btn.up { background: var(--accent); }
+        .scroll-btn.down { background: var(--secondary); }
+        
+        /* Indicador de posição */
+        .scroll-position {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            background: var(--dark);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            display: none;
+            z-index: 999;
+        }
+        
+        .scroll-position.show {
+            display: block;
+        }
+        
+        /* Quick actions */
+        .quick-actions {
+            display: flex;
+            gap: 8px;
+            padding: 10px 0;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin-bottom: 15px;
+            scrollbar-width: none;
+        }
+        
+        .quick-actions::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .quick-action-btn {
+            background: white;
+            border: 1px solid #ddd;
+            padding: 8px 15px;
+            border-radius: 25px;
+            white-space: nowrap;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
         
         .tab-content { 
@@ -141,8 +216,8 @@
         .card { 
             background: white; 
             padding: 15px; 
-            border-radius: 8px; 
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1); 
+            border-radius: 12px; 
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1); 
             margin-bottom: 15px; 
         }
         
@@ -156,12 +231,6 @@
             display: grid; 
             grid-template-columns: repeat(3, 1fr); 
             gap: 10px; 
-        }
-        
-        @media (max-width: 767px) {
-            .grid-cards-3 {
-                grid-template-columns: repeat(2, 1fr);
-            }
         }
         
         .dash-card { 
@@ -216,65 +285,34 @@
         input, select, button, textarea { 
             padding: 14px; 
             border-radius: 8px; 
-            border: 1px solid #ccc; 
+            border: 1px solid #ddd; 
             font-size: 16px;
             -webkit-appearance: none;
             appearance: none;
+            width: 100%;
         }
         
-        textarea { 
-            min-height: 100px; 
-            resize: vertical; 
+        .btn-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
         }
         
-        .btn-add { 
-            background: var(--success); 
-            color: white; 
-            border: none; 
-            font-weight: bold; 
-            cursor: pointer; 
+        .btn-group button {
+            flex: 1;
+            min-width: 120px;
         }
         
-        .btn-danger { 
-            background: var(--danger); 
-            color: white; 
-            border: none; 
-            padding: 10px; 
-            border-radius: 6px; 
-            cursor: pointer; 
-        }
-        
-        .btn-warning { 
-            background: var(--warning); 
-            color: white; 
-            border: none; 
-            padding: 10px; 
-            border-radius: 6px; 
-            cursor: pointer; 
-        }
-        
-        .btn-info { 
-            background: var(--info); 
-            color: white; 
-            border: none; 
-            padding: 10px; 
-            border-radius: 6px; 
-            cursor: pointer; 
-        }
-        
-        .btn-cie { 
-            background: var(--cie); 
-            color: white; 
-            border: none; 
-            padding: 10px; 
-            border-radius: 6px; 
-            cursor: pointer; 
-        }
+        .btn-add { background: var(--success); color: white; border: none; }
+        .btn-danger { background: var(--danger); color: white; border: none; }
+        .btn-warning { background: var(--warning); color: white; border: none; }
+        .btn-info { background: var(--info); color: white; border: none; }
+        .btn-cie { background: var(--cie); color: white; border: none; }
         
         .badge { 
             padding: 4px 10px; 
             border-radius: 20px; 
-            font-size: 0.8rem; 
+            font-size: 0.75rem; 
             font-weight: bold; 
             display: inline-block;
         }
@@ -292,7 +330,9 @@
             flex-wrap: wrap; 
         }
         
-        .search-box input, .search-box select { 
+        .search-box input, 
+        .search-box select, 
+        .search-box button { 
             flex: 1; 
             min-width: 200px; 
         }
@@ -362,7 +402,7 @@
             nav.sidebar {
                 width: 100%;
                 height: auto;
-                max-height: 60px;
+                max-height: none;
                 overflow-x: auto;
                 overflow-y: hidden;
             }
@@ -378,10 +418,11 @@
             }
             
             .sidebar-menu li {
-                display: inline-block;
-                padding: 10px 15px;
+                display: inline-flex;
+                padding: 10px 12px;
                 border-left: none;
                 border-bottom: 3px solid transparent;
+                font-size: 0.8rem;
             }
             
             .sidebar-menu li.active {
@@ -393,12 +434,13 @@
                 padding: 10px;
             }
             
-            .grid-cards {
-                gap: 8px;
+            .grid-cards,
+            .grid-cards-3 {
+                gap: 6px;
             }
             
             .dash-card h1 {
-                font-size: 1.4rem;
+                font-size: 1.2rem;
             }
             
             .search-box {
@@ -409,6 +451,25 @@
             .search-box select,
             .search-box button {
                 width: 100%;
+            }
+            
+            .btn-group {
+                flex-direction: column;
+            }
+            
+            .btn-group button {
+                width: 100%;
+            }
+            
+            .scroll-controls {
+                bottom: 10px;
+                right: 10px;
+            }
+            
+            .scroll-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 16px;
             }
         }
     </style>
@@ -429,9 +490,32 @@
         </nav>
 
         <main id="main-content">
-            <button id="scroll-top-btn" onclick="scrollToTop()" title="Voltar ao topo">
-                <i class="fas fa-arrow-up"></i>
-            </button>
+            <!-- Barra de progresso -->
+            <div class="scroll-progress">
+                <div id="scroll-progress-bar" class="scroll-progress-bar"></div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+                <button class="quick-action-btn" onclick="showTab('ponto')"><i class="fas fa-clock"></i> Ponto</button>
+                <button class="quick-action-btn" onclick="showTab('tarefas')"><i class="fas fa-plus"></i> Tarefa</button>
+                <button class="quick-action-btn" onclick="showTab('ocorrencias')"><i class="fas fa-exclamation-triangle"></i> CIE</button>
+                <button class="quick-action-btn" onclick="showTab('equipe')"><i class="fas fa-user-plus"></i> Funcionário</button>
+            </div>
+
+            <!-- Controles de scroll -->
+            <div class="scroll-controls">
+                <div id="scroll-position" class="scroll-position">0%</div>
+                <button id="scroll-up-btn" class="scroll-btn up" onclick="scrollPage('up')" title="Rolar para cima">
+                    <i class="fas fa-arrow-up"></i>
+                </button>
+                <button id="scroll-down-btn" class="scroll-btn down" onclick="scrollPage('down')" title="Rolar para baixo">
+                    <i class="fas fa-arrow-down"></i>
+                </button>
+                <button id="scroll-top-btn" class="scroll-btn up" onclick="scrollToTop()" title="Voltar ao topo">
+                    <i class="fas fa-angle-double-up"></i>
+                </button>
+            </div>
 
             <div id="storage-warning" style="display: none;" class="storage-info">
                 <i class="fas fa-exclamation-triangle"></i>
@@ -439,7 +523,7 @@
                     <div id="storage-fill" class="storage-fill" style="width: 0%"></div>
                 </div>
                 <span id="storage-text">0% utilizado</span>
-                <button onclick="limparHistoricoAntigo()" class="btn-warning" style="margin-left: auto;">Limpar</button>
+                <button onclick="limparHistoricoAntigo()" class="btn-warning" style="margin-left: auto; padding: 5px 10px;">Limpar</button>
             </div>
 
             <section id="dashboard" class="tab-content active">
@@ -467,7 +551,7 @@
                 </div>
                 
                 <div class="card">
-                    <h3>Resumo de Ausências:</h3>
+                    <h3>Resumo de Ausências</h3>
                     <div id="d-resumo-motivos" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;"></div>
                 </div>
                 
@@ -504,7 +588,7 @@
                 </div>
                 
                 <div class="card">
-                    <h3>Alertas por Função:</h3>
+                    <h3>Alertas por Função</h3>
                     <div id="d-alertas-funcao"></div>
                 </div>
             </section>
@@ -512,7 +596,7 @@
             <section id="ponto" class="tab-content">
                 <div class="card">
                     <h3>Ponto do Dia: <span id="data-atual"></span></h3>
-                    <input type="text" id="p-busca" placeholder="Filtrar por nome..." onkeyup="renderPonto()" style="margin-bottom: 10px; width: 100%;">
+                    <input type="text" id="p-busca" placeholder="Filtrar por nome..." onkeyup="renderPonto()" style="margin-bottom: 10px;">
                     <div class="table-responsive">
                         <table>
                             <thead>
@@ -533,9 +617,9 @@
                 <div class="card">
                     <h3>Nova Tarefa</h3>
                     <form id="f-tarefa" class="form-group" onsubmit="salvarTarefa(event)">
-                        <input type="text" id="t-desc" placeholder="Descrição da Tarefa" required>
+                        <input type="text" id="t-desc" placeholder="Descrição" required>
                         <select id="t-resp" required>
-                            <option value="">Selecione um responsável</option>
+                            <option value="">Responsável</option>
                         </select>
                         <select id="t-prioridade" required>
                             <option value="Baixa">Baixa</option>
@@ -550,7 +634,7 @@
 
             <section id="equipe" class="tab-content">
                 <div class="card">
-                    <h3>Cadastrar Funcionário</h3>
+                    <h3>Novo Funcionário</h3>
                     <form id="f-equipe" class="form-group" onsubmit="salvarEquipe(event)">
                         <input type="text" id="e-nome" placeholder="Nome" required>
                         <input type="text" id="e-mat" placeholder="Matrícula" required>
@@ -592,8 +676,7 @@
                                 <option value="Avaria">Avaria</option>
                                 <option value="Atraso">Atraso</option>
                                 <option value="Falta">Falta</option>
-                                <option value="Problema Veículo">Problema</option>
-                                <option value="Cliente">Cliente</option>
+                                <option value="Problema">Problema</option>
                                 <option value="Outros">Outros</option>
                             </select>
                             <input type="text" id="cie-numero" placeholder="Número CIE">
@@ -614,7 +697,7 @@
                         
                         <textarea id="cie-descricao" placeholder="Descrição..." required></textarea>
                         
-                        <button type="submit" class="btn-cie">REGISTRAR</button>
+                        <button type="submit" class="btn-cie">Registrar</button>
                     </form>
                 </div>
                 
@@ -627,7 +710,6 @@
                             <option value="Acidente">Acidente</option>
                             <option value="Avaria">Avaria</option>
                             <option value="Atraso">Atraso</option>
-                            <option value="Falta">Falta</option>
                         </select>
                     </div>
                 </div>
@@ -637,11 +719,11 @@
 
             <section id="historico" class="tab-content">
                 <div class="card">
-                    <h4>Consultar Registros</h4>
+                    <h4>Consultar Histórico</h4>
                     <div class="search-box">
                         <input type="date" id="h-data-busca">
                         <input type="text" id="h-func-busca" placeholder="Funcionário">
-                        <button onclick="buscarHistorico()" class="btn-add">Consultar</button>
+                        <button onclick="buscarHistorico()" class="btn-add">Buscar</button>
                         <button onclick="carregarHistoricoHoje()" class="btn-info">Hoje</button>
                     </div>
                 </div>
@@ -652,32 +734,22 @@
                 <div class="card">
                     <h4>Limites de Ausência</h4>
                     <div id="c-lista-limites" class="form-group"></div>
-                    <button onclick="salvarLimites()" class="btn-add">Salvar Limites</button>
+                    <button onclick="salvarLimites()" class="btn-add">Salvar</button>
                 </div>
                 <div class="card">
                     <h4>Backup</h4>
-                    <div class="form-group">
-                        <button onclick="forcarDownloadBackup()" style="background:var(--primary); color:white;">
-                            Exportar Backup
-                        </button>
-                        <button onclick="document.getElementById('in-file').click()" style="background:var(--secondary); color:white;">
-                            Importar Backup
-                        </button>
-                        <input type="file" id="in-file" style="display: none;" accept=".json" onchange="importarBackup(this)">
+                    <div class="btn-group">
+                        <button onclick="forcarDownloadBackup()" style="background:var(--primary); color:white;">Exportar</button>
+                        <button onclick="document.getElementById('in-file').click()" style="background:var(--secondary); color:white;">Importar</button>
                     </div>
+                    <input type="file" id="in-file" style="display: none;" accept=".json" onchange="importarBackup(this)">
                 </div>
                 <div class="card">
                     <h4>Gerenciar Espaço</h4>
-                    <div class="form-group">
-                        <button onclick="limparHistoricoAntigo()" class="btn-warning">
-                            Limpar Histórico Antigo
-                        </button>
-                        <button onclick="compactarDados()" class="btn-info">
-                            Compactar Dados
-                        </button>
-                        <button onclick="limparTudo()" style="background:var(--danger); color:white;">
-                            Limpar Tudo
-                        </button>
+                    <div class="btn-group">
+                        <button onclick="limparHistoricoAntigo()" class="btn-warning">Limpar Histórico</button>
+                        <button onclick="compactarDados()" class="btn-info">Compactar</button>
+                        <button onclick="limparTudo()" style="background:var(--danger); color:white;">Limpar Tudo</button>
                     </div>
                 </div>
             </section>
@@ -690,19 +762,56 @@
         const MOTIVOS = ["Falta", "Atestado", "Licença", "Férias", "Serviço externo"];
         const MAX_STORAGE_SIZE = 5 * 1024 * 1024;
 
-        // ELEMENTOS
+        // ELEMENTOS DE SCROLL
         const mainContent = document.getElementById('main-content');
-        const scrollBtn = document.getElementById('scroll-top-btn');
+        const scrollUpBtn = document.getElementById('scroll-up-btn');
+        const scrollDownBtn = document.getElementById('scroll-down-btn');
+        const scrollTopBtn = document.getElementById('scroll-top-btn');
+        const scrollPosition = document.getElementById('scroll-position');
+        const progressBar = document.getElementById('scroll-progress-bar');
 
         // CONTROLE DE SCROLL
-        if (mainContent) {
-            mainContent.addEventListener('scroll', function() {
-                if (this.scrollTop > 300) {
-                    scrollBtn.classList.add('show');
-                } else {
-                    scrollBtn.classList.remove('show');
-                }
-            });
+        let scrollTimeout;
+
+        function updateScrollControls() {
+            if (!mainContent) return;
+            
+            const scrollTop = mainContent.scrollTop;
+            const scrollHeight = mainContent.scrollHeight;
+            const clientHeight = mainContent.clientHeight;
+            const maxScroll = scrollHeight - clientHeight;
+            
+            // Posição percentual
+            const percent = maxScroll > 0 ? (scrollTop / maxScroll) * 100 : 0;
+            if (progressBar) {
+                progressBar.style.width = percent + '%';
+            }
+            
+            // Mostrar/esconder botões
+            if (scrollTop > 50) {
+                scrollUpBtn.classList.add('show');
+                scrollTopBtn.classList.add('show');
+            } else {
+                scrollUpBtn.classList.remove('show');
+                scrollTopBtn.classList.remove('show');
+            }
+            
+            if (scrollTop < maxScroll - 50) {
+                scrollDownBtn.classList.add('show');
+            } else {
+                scrollDownBtn.classList.remove('show');
+            }
+            
+            // Mostrar posição
+            if (scrollPosition) {
+                scrollPosition.textContent = Math.round(percent) + '%';
+                scrollPosition.classList.add('show');
+                
+                clearTimeout(scrollTimeout);
+                scrollTimeout = setTimeout(() => {
+                    scrollPosition.classList.remove('show');
+                }, 1500);
+            }
         }
 
         function scrollToTop() {
@@ -712,6 +821,29 @@
                     behavior: 'smooth'
                 });
             }
+        }
+
+        function scrollPage(direction) {
+            if (!mainContent) return;
+            
+            const scrollAmount = window.innerHeight * 0.3;
+            
+            if (direction === 'up') {
+                mainContent.scrollBy({
+                    top: -scrollAmount,
+                    behavior: 'smooth'
+                });
+            } else {
+                mainContent.scrollBy({
+                    top: scrollAmount,
+                    behavior: 'smooth'
+                });
+            }
+        }
+
+        // Event listeners de scroll
+        if (mainContent) {
+            mainContent.addEventListener('scroll', updateScrollControls);
         }
 
         // FUNÇÕES DE STORAGE
@@ -846,6 +978,11 @@
             );
             if(li) li.classList.add('active');
 
+            // Reset scroll
+            if (mainContent) {
+                mainContent.scrollTop = 0;
+            }
+
             switch(id) {
                 case 'dashboard': renderDashboard(); break;
                 case 'equipe': renderEquipe(); break;
@@ -898,7 +1035,7 @@
                 `<tr>
                     <td>${f.mat || ''}</td>
                     <td>${f.nome || ''}</td>
-                    <td><span class="badge" style="background:var(--accent);">${f.fun || ''}</span></td>
+                    <td><span class="badge" style="background:var(--accent); color:white;">${f.fun || ''}</span></td>
                     <td><button onclick="removerEquipe(${i})" class="btn-danger">X</button></td>
                 </tr>`
             ).join('');
@@ -1102,7 +1239,7 @@
                     <p><small>Func: ${c.funcionario} | Impacto: ${c.impacto}</small></p>
                     <p><small>Data: ${new Date(c.data).toLocaleDateString('pt-BR')}</small></p>
                     <div style="display:flex; gap:5px; margin-top:10px;">
-                        <button onclick="resolverCIE(${c.id})" class="btn-success" style="flex:1;">Resolver</button>
+                        <button onclick="resolverCIE(${c.id})" class="btn-success" style="flex:1; background:var(--success); color:white; border:none; padding:8px;">Resolver</button>
                         <button onclick="excluirCIE(${c.id})" class="btn-danger">X</button>
                     </div>
                 </div>
@@ -1193,7 +1330,7 @@
                 ).length;
                 
                 if (limites[cat] > 0 && ausentes >= limites[cat]) {
-                    alertasHTML += `<div style="background:var(--warning); padding:10px; margin:5px 0; color:white;">
+                    alertasHTML += `<div style="background:var(--warning); padding:10px; margin:5px 0; color:white; border-radius:4px;">
                         ${cat}: ${ausentes} ausentes (limite ${limites[cat]})
                     </div>`;
                 }
@@ -1209,7 +1346,7 @@
                 cieAlertas.innerHTML = ciesCriticas.map(c => `
                     <div class="cie-alert">
                         <strong>CIE Crítica: ${c.numero}</strong> - ${c.descricao.substring(0,50)}
-                        <button onclick="showTab('ocorrencias')" class="btn-warning">Ver</button>
+                        <button onclick="showTab('ocorrencias')" class="btn-warning" style="padding:5px 10px;">Ver</button>
                     </div>
                 `).join('');
             } else {
@@ -1273,17 +1410,20 @@
                 html += `
                     <div class="card">
                         <h4>${new Date(data).toLocaleDateString('pt-BR')}</h4>
-                        <table>
-                            <thead><tr><th>Nome</th><th>Status</th></tr></thead>
-                            <tbody>
-                                ${agrupado[data].map(p => `
-                                    <tr>
-                                        <td>${p.nome}</td>
-                                        <td><span class="badge ${p.status === 'Presente' ? 'badge-success' : 'badge-danger'}">${p.status}</span></td>
-                                    </tr>
-                                `).join('')}
-                            </tbody>
-                        </table>
+                        <div class="table-responsive">
+                            <table>
+                                <thead><tr><th>Nome</th><th>Status</th><th>Tempo</th></tr></thead>
+                                <tbody>
+                                    ${agrupado[data].map(p => `
+                                        <tr>
+                                            <td>${p.nome}</td>
+                                            <td><span class="badge ${p.status === 'Presente' ? 'badge-success' : p.status === 'Atraso' ? 'badge-warning' : 'badge-danger'}">${p.status}</span></td>
+                                            <td>${p.tempo || '-'}</td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 `;
             }
@@ -1295,9 +1435,9 @@
         function renderConfigs() {
             const limites = get('db_limites') || {};
             document.getElementById('c-lista-limites').innerHTML = CATS.map(f => `
-                <div style="display:flex; justify-content:space-between; padding:5px 0;">
+                <div style="display:flex; justify-content:space-between; align-items:center; padding:5px 0;">
                     <label>${f}</label>
-                    <input type="number" id="lim-${f}" value="${limites[f] || 0}" style="width:70px;">
+                    <input type="number" id="lim-${f}" value="${limites[f] || 0}" style="width:70px; text-align:center;">
                 </div>
             `).join('');
         }
@@ -1360,6 +1500,7 @@
                     if (dados.db_limites) set('db_limites', dados.db_limites);
                     if (dados.db_historico) set('db_historico', dados.db_historico);
                     if (dados.db_cies) set('db_cies', dados.db_cies);
+                    if (dados.ultima_data) localStorage.setItem('ultima_data', dados.ultima_data);
                     
                     alert('Backup restaurado!');
                     location.reload();
@@ -1409,7 +1550,6 @@
                 set('db_ponto', {});
                 localStorage.setItem('ultima_data', hoje);
                 
-                // Resetar tarefas
                 const tarefas = get('db_tarefas') || [];
                 if (tarefas.length > 0) {
                     set('db_tarefas', tarefas.map(t => ({...t, status: 'Pendente'})));
