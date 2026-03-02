@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>Logística Master - V19 Backup Funcional</title>
+    <title>Logística Master - V20 Backup Corrigido</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
@@ -661,7 +661,8 @@
                 <div class="card">
                     <h4>Backup e Compartilhamento</h4>
                     <div class="btn-group">
-                        <button onclick="abrirModalBackup()" class="btn-info"><i class="fas fa-share-alt"></i> Compartilhar Backup</button>
+                        <button onclick="exportarBackup()" class="btn-info"><i class="fas fa-download"></i> Exportar Backup</button>
+                        <button onclick="abrirModalBackup()" class="btn-whatsapp"><i class="fas fa-share-alt"></i> Compartilhar</button>
                         <button onclick="document.getElementById('in-file').click()" style="background:var(--secondary); color:white;"><i class="fas fa-upload"></i> Importar</button>
                     </div>
                     <input type="file" id="in-file" style="display: none;" accept=".json" onchange="importarBackup(this)">
@@ -714,7 +715,7 @@
         }
         if (mainContent) mainContent.addEventListener('scroll', updateScrollControls);
 
-        // FUNÇÕES DE STORAGE CORRIGIDAS
+        // FUNÇÕES DE STORAGE
         function get(key) {
             try {
                 const value = localStorage.getItem(key);
@@ -749,67 +750,181 @@
             }
         }
 
-        // FUNÇÕES DE BACKUP E COMPARTILHAMENTO
-        function abrirModalBackup() { document.getElementById('share-modal').classList.add('active'); }
-        function fecharModal() { document.getElementById('share-modal').classList.remove('active'); }
+        // FUNÇÕES DE BACKUP CORRIGIDAS
+        function exportarBackup() {
+            try {
+                const backup = {
+                    db_equipe: get('db_equipe') || [],
+                    db_tarefas: get('db_tarefas') || [],
+                    db_ponto: get('db_ponto') || {},
+                    db_limites: get('db_limites') || {},
+                    db_historico: get('db_historico') || [],
+                    db_cies: get('db_cies') || [],
+                    ultima_data: localStorage.getItem('ultima_data') || new Date().toISOString().split('T')[0],
+                    versao: '1.0',
+                    data_backup: new Date().toISOString()
+                };
+                
+                const jsonString = JSON.stringify(backup, null, 2);
+                const blob = new Blob([jsonString], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                
+                const agora = new Date();
+                const dataHora = `${agora.getFullYear()}-${String(agora.getMonth()+1).padStart(2,'0')}-${String(agora.getDate()).padStart(2,'0')}_${String(agora.getHours()).padStart(2,'0')}-${String(agora.getMinutes()).padStart(2,'0')}`;
+                
+                link.href = url;
+                link.download = `LOGISTICA_BACKUP_${dataHora}.json`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                setTimeout(() => URL.revokeObjectURL(url), 100);
+                
+                alert('Backup exportado com sucesso!');
+            } catch (e) {
+                console.error('Erro no backup:', e);
+                alert('Erro ao exportar backup: ' + e.message);
+            }
+        }
 
-        function gerarBackupJSON() {
-            return {
-                db_equipe: get('db_equipe'),
-                db_tarefas: get('db_tarefas'),
-                db_ponto: get('db_ponto'),
-                db_limites: get('db_limites'),
-                db_historico: get('db_historico'),
-                db_cies: get('db_cies'),
-                ultima_data: localStorage.getItem('ultima_data'),
-                data_backup: new Date().toISOString(),
-                versao: '1.0'
+        function importarBackup(input) {
+            if (!input.files || !input.files[0]) {
+                alert('Selecione um arquivo de backup.');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const conteudo = e.target.result;
+                    const dados = JSON.parse(conteudo);
+                    
+                    // Verificar se é um backup válido
+                    if (!dados || typeof dados !== 'object') {
+                        throw new Error('Arquivo de backup inválido');
+                    }
+                    
+                    // Restaurar dados com verificação
+                    if (dados.db_equipe !== undefined) set('db_equipe', dados.db_equipe);
+                    if (dados.db_tarefas !== undefined) set('db_tarefas', dados.db_tarefas);
+                    if (dados.db_ponto !== undefined) set('db_ponto', dados.db_ponto);
+                    if (dados.db_limites !== undefined) set('db_limites', dados.db_limites);
+                    if (dados.db_historico !== undefined) set('db_historico', dados.db_historico);
+                    if (dados.db_cies !== undefined) set('db_cies', dados.db_cies);
+                    if (dados.ultima_data) localStorage.setItem('ultima_data', dados.ultima_data);
+                    
+                    alert('Backup restaurado com sucesso! A página será recarregada.');
+                    setTimeout(() => location.reload(), 1500);
+                    
+                } catch (erro) {
+                    console.error('Erro na importação:', erro);
+                    alert('Erro ao importar backup. Arquivo inválido ou corrompido.');
+                } finally {
+                    // Limpar input
+                    input.value = '';
+                }
             };
+            
+            reader.onerror = function() {
+                alert('Erro ao ler o arquivo.');
+                input.value = '';
+            };
+            
+            reader.readAsText(input.files[0]);
+        }
+
+        function abrirModalBackup() { 
+            document.getElementById('share-modal').classList.add('active'); 
+        }
+        
+        function fecharModal() { 
+            document.getElementById('share-modal').classList.remove('active'); 
         }
 
         function shareBackup(tipo) {
-            const backup = gerarBackupJSON();
-            const jsonString = JSON.stringify(backup, null, 2);
-            const agora = new Date();
-            const dataHora = `${agora.getFullYear()}-${String(agora.getMonth()+1).padStart(2,'0')}-${String(agora.getDate()).padStart(2,'0')}_${String(agora.getHours()).padStart(2,'0')}-${String(agora.getMinutes()).padStart(2,'0')}`;
-            const nomeArquivo = `LOGISTICA_BACKUP_${dataHora}.json`;
+            try {
+                const backup = {
+                    db_equipe: get('db_equipe') || [],
+                    db_tarefas: get('db_tarefas') || [],
+                    db_ponto: get('db_ponto') || {},
+                    db_limites: get('db_limites') || {},
+                    db_historico: get('db_historico') || [],
+                    db_cies: get('db_cies') || [],
+                    ultima_data: localStorage.getItem('ultima_data') || new Date().toISOString().split('T')[0],
+                    versao: '1.0',
+                    data_backup: new Date().toISOString()
+                };
+                
+                const jsonString = JSON.stringify(backup, null, 2);
+                const agora = new Date();
+                const dataHora = `${agora.getFullYear()}-${String(agora.getMonth()+1).padStart(2,'0')}-${String(agora.getDate()).padStart(2,'0')}_${String(agora.getHours()).padStart(2,'0')}-${String(agora.getMinutes()).padStart(2,'0')}`;
+                const nomeArquivo = `LOGISTICA_BACKUP_${dataHora}.json`;
 
-            switch(tipo) {
-                case 'whatsapp':
-                    const texto = `*Backup Logística Master*\nData: ${new Date().toLocaleString('pt-BR')}`;
-                    if (navigator.share) {
-                        const blob = new Blob([jsonString], { type: 'application/json' });
-                        const file = new File([blob], nomeArquivo, { type: 'application/json' });
-                        navigator.share({ title: 'Backup Logística Master', text: texto, files: [file] }).catch(() => {
-                            window.open(`https://wa.me/?text=${encodeURIComponent(texto + '\n' + jsonString)}`, '_blank');
+                switch(tipo) {
+                    case 'whatsapp':
+                        const texto = `*Backup Logística Master*\nData: ${new Date().toLocaleString('pt-BR')}`;
+                        if (navigator.share) {
+                            const blob = new Blob([jsonString], { type: 'application/json' });
+                            const file = new File([blob], nomeArquivo, { type: 'application/json' });
+                            navigator.share({
+                                title: 'Backup Logística Master',
+                                text: texto,
+                                files: [file]
+                            }).catch(() => {
+                                window.open(`https://wa.me/?text=${encodeURIComponent(texto + '\n\n' + jsonString)}`, '_blank');
+                            });
+                        } else {
+                            window.open(`https://wa.me/?text=${encodeURIComponent(texto + '\n\n' + jsonString)}`, '_blank');
+                        }
+                        break;
+                        
+                    case 'email':
+                        const assunto = 'Backup Logística Master';
+                        const corpo = `Backup gerado em ${new Date().toLocaleString('pt-BR')}\n\nDados do backup:\n\n${jsonString}`;
+                        window.location.href = `mailto:?subject=${encodeURIComponent(assunto)}&body=${encodeURIComponent(corpo)}`;
+                        break;
+                        
+                    case 'copy':
+                        navigator.clipboard.writeText(jsonString).then(() => {
+                            alert('Backup copiado para a área de transferência!');
+                        }).catch(() => {
+                            const textarea = document.createElement('textarea');
+                            textarea.value = jsonString;
+                            document.body.appendChild(textarea);
+                            textarea.select();
+                            document.execCommand('copy');
+                            document.body.removeChild(textarea);
+                            alert('Backup copiado para a área de transferência!');
                         });
-                    } else {
-                        window.open(`https://wa.me/?text=${encodeURIComponent(texto + '\n\n' + jsonString)}`, '_blank');
-                    }
-                    break;
-                case 'email':
-                    window.location.href = `mailto:?subject=${encodeURIComponent('Backup Logística Master')}&body=${encodeURIComponent('Backup gerado em ' + new Date().toLocaleString('pt-BR') + '\n\n' + jsonString)}`;
-                    break;
-                case 'copy':
-                    navigator.clipboard.writeText(jsonString).then(() => alert('Backup copiado!'));
-                    break;
-                case 'download':
-                    const blob = new Blob([jsonString], { type: 'application/json' });
-                    const url = URL.createObjectURL(blob);
-                    const link = document.createElement('a');
-                    link.href = url;
-                    link.download = nomeArquivo;
-                    link.click();
-                    setTimeout(() => URL.revokeObjectURL(url), 100);
-                    break;
+                        break;
+                        
+                    case 'download':
+                        const blob = new Blob([jsonString], { type: 'application/json' });
+                        const url = URL.createObjectURL(blob);
+                        const link = document.createElement('a');
+                        link.href = url;
+                        link.download = nomeArquivo;
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                        setTimeout(() => URL.revokeObjectURL(url), 100);
+                        break;
+                }
+                fecharModal();
+            } catch (e) {
+                console.error('Erro no compartilhamento:', e);
+                alert('Erro ao compartilhar backup.');
             }
-            fecharModal();
         }
 
         // FUNÇÕES DE ESPAÇO
         function calcularTamanhoStorage() {
             let total = 0;
-            for (let key in localStorage) if (localStorage.hasOwnProperty(key)) total += (localStorage[key].length * 2);
+            for (let key in localStorage) {
+                if (localStorage.hasOwnProperty(key)) {
+                    total += (localStorage[key].length * 2);
+                }
+            }
             return total;
         }
 
@@ -819,12 +934,15 @@
             const warning = document.getElementById('storage-warning');
             const fill = document.getElementById('storage-fill');
             const text = document.getElementById('storage-text');
+            
             if (percentual > 70 && warning) {
                 warning.style.display = 'flex';
                 fill.style.width = Math.min(percentual, 100) + '%';
                 text.textContent = `${(usado / 1024 / 1024).toFixed(2)}MB / 5MB (${percentual.toFixed(1)}%)`;
                 fill.style.background = percentual > 90 ? 'var(--danger)' : 'var(--warning)';
-            } else if (warning) warning.style.display = 'none';
+            } else if (warning) {
+                warning.style.display = 'none';
+            }
         }
 
         // INICIALIZAÇÃO
@@ -1230,26 +1348,6 @@
                 set('db_historico', historicoCompactado);
                 alert('Dados compactados!');
             } catch (e) { alert('Erro ao compactar.'); }
-        }
-
-        function importarBackup(input) {
-            if (!input.files?.[0]) return;
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                try {
-                    const dados = JSON.parse(e.target.result);
-                    if (dados.db_equipe) set('db_equipe', dados.db_equipe);
-                    if (dados.db_tarefas) set('db_tarefas', dados.db_tarefas);
-                    if (dados.db_ponto) set('db_ponto', dados.db_ponto);
-                    if (dados.db_limites) set('db_limites', dados.db_limites);
-                    if (dados.db_historico) set('db_historico', dados.db_historico);
-                    if (dados.db_cies) set('db_cies', dados.db_cies);
-                    if (dados.ultima_data) localStorage.setItem('ultima_data', dados.ultima_data);
-                    alert('Backup restaurado!');
-                    location.reload();
-                } catch (erro) { alert('Arquivo inválido.'); }
-            };
-            reader.readAsText(input.files[0]);
         }
 
         function limparTudo() {
